@@ -1,15 +1,17 @@
 <?php
 
 declare(strict_types=1);
-include_once "prelude.php";
+include_once PROJECT_ROOT . '/prelude.php';
 
 // include database connection settings
 require_once PROJECT_ROOT . '/../connectionSettings.php';
 
 class Database
 {
-    public static ?Database $instance = null;
-    public ?mysqli $mysqli = null;
+    /// @var Database|null
+    public static $instance = null;
+    /// @var mysqli|null
+    public $mysqli = null;
 
     private function __construct()
     {

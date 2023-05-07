@@ -12,7 +12,7 @@ include '../header.html';
   <h2>Weather Forecast</h2>
 </div>
 
-<?php 
+<?php
 
 include '../footer.html';
 

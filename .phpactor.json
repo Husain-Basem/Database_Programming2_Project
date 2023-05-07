@@ -1,8 +1,8 @@
 {
-    "$schema": "/usr/lib/phpactor/phpactor.schema.json",
-    "language_server_psalm.enabled": true,
-    "language_server_php_cs_fixer.enabled": true,
-    "language_server_php_cs_fixer.env": {
-        "PHP_CS_FIXER_IGNORE_ENV": "on"
-    }
+  "$schema": "/usr/lib/phpactor/phpactor.schema.json",
+  "language_server_psalm.enabled": true,
+  "language_server_php_cs_fixer.enabled": false,
+  "language_server_php_cs_fixer.env": {
+    "PHP_CS_FIXER_IGNORE_ENV": "on"
+  }
 }

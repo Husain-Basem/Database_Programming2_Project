@@ -12,7 +12,7 @@ include '../header.html';
   <h2>Tourism</h2>
 </div>
 
-<?php 
+<?php
 
 include '../footer.html';
 
