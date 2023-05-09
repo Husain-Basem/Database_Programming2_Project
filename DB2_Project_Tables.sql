@@ -10,8 +10,8 @@ CREATE TABLE `Users`
 `email` varchar(250) NOT NULL,
 `type` varchar(10) NOT NULL,
 `description` varchar(250), 
-`date` date NOT NULL,
 `country` varchar(250) NOT NULL,
+`date` date NOT NULL,
 PRIMARY KEY (`userId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
