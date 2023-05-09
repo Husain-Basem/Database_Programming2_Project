@@ -16,6 +16,9 @@ var_dump(Database::getInstance()->mysqli->get_server_info()) ?>
         <?php echo "PROJECT_ROOT: " . PROJECT_ROOT  ?>
         <br>
         <?php echo "BASE_URL: " . BASE_URL ?>
+        <br>
+        <?php echo "Bob: ";
+var_dump(User::from_userId(1)) ?>
     </p>
 </div>
 

@@ -31,5 +31,13 @@ class Database
     {
         $this->mysqli->close();
     }
+    /**
+     * @param string $query
+     * @return mysqli_result|bool
+     */
+    public function query(string $query): object
+    {
+        return $this->mysqli->query($query);
+    }
 
 }
