@@ -39,12 +39,12 @@ PRIMARY KEY (`commentId`)
 
 CREATE TABLE `Files` (
 `fileId` int(20) NOT NULL AUTO_INCREMENT ,
-`fName` varchar(250) NOT NULL,
-`fType` varchar(250) NOT NULL,
-`fLocation` varchar(250) NOT NULL,
+`fileName` varchar(250) NOT NULL,
+`fileType` varchar(250) NOT NULL,
+`fileLocation` varchar(250) NOT NULL,
 `downloadable` boolean NOT NULL,
-`articleId` int(20) NOT NULL,
-`userId` int(20) NOT NULL,
+`articleId` int(20),
+`userId` int(20),
 PRIMARY KEY (`fileId`),
 FOREIGN KEY (articleId) REFERENCES Articles(articleId),
 FOREIGN KEY (userId) REFERENCES Users(userId)
