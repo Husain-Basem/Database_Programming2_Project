@@ -19,7 +19,7 @@ CREATE TABLE `Articles`
 (
 `articleId` int(20) NOT NULL AUTO_INCREMENT ,
 `title` varchar(250) NOT NULL,
-`content` varchar(32000) NOT NULL,
+`content` varchar(65535) NOT NULL,
 `readTime` int(250) NOT NULL,
 `writtenBy` int(20) NOT NULL,
 `date` date NOT NULL,
