@@ -48,9 +48,10 @@ PRIMARY KEY (`fId`)
 
 
 
-* In users database 
+/* In users database 
 	*type of user is categorized into three:
 //-Viewer 
 //-News Writer/Author <- can add a description 
 //-Admin,
 
+*/
