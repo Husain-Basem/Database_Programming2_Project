@@ -29,11 +29,13 @@ PRIMARY KEY (`articleId`)
 CREATE TABLE `Comments`
 (
 `commentId` int(20) NOT NULL AUTO_INCREMENT ,
-`comment` varchar(32000) NOT NULL,
-`rating` varchar(250) NOT NULL,
+`comment` varchar(32000),
+`rating` varchar(250),
 `reviewBy` int(20) NOT NULL,
 `date` date NOT NULL,
-PRIMARY KEY (`commentId`)
+`articleId` int(20),
+PRIMARY KEY (`commentId`),
+FOREIGN KEY (articleId) REFERENCES Articles(articleId)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
