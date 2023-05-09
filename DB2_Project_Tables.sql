@@ -1,3 +1,5 @@
+drop table if exists `Users`, `Articles`, `Comments`, `Files`;
+
 CREATE TABLE `Users`
 (
 `uId` int(20) NOT NULL AUTO_INCREMENT ,
