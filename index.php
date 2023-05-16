@@ -17,9 +17,12 @@ var_dump(Database::getInstance()->mysqli->get_server_info()) ?>
         <br>
         <?php echo "BASE_URL: " . BASE_URL ?>
         <br>
+        <?php User::register_user('bob', 'bobson', 'bob', '123', 'bob@bob.com', 'VIEWER', null, 'Bahrain') ?>
         <?php echo "Bob: ";
-var_dump(User::from_userId(1)) ?>
-    </p>
+var_dump(User::from_username('bob')) ?>
+        <br>
+        <?= var_dump(User::username_exists('bob'), User::check_credentials('bob', '123')) ?>
+       </p>
 </div>
 
 <?php

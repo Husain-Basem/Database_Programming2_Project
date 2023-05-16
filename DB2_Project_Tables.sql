@@ -5,7 +5,7 @@ CREATE TABLE `Users`
 `userId` int(20) NOT NULL AUTO_INCREMENT ,
 `firstName` varchar(250) NOT NULL,
 `lastName` varchar(250) NOT NULL,
-`username` varchar(250) NOT NULL,
+`userName` varchar(250) NOT NULL,
 `password` varchar(250) NOT NULL,
 `email` varchar(250) NOT NULL,
 `type` varchar(10) NOT NULL,

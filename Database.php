@@ -40,4 +40,18 @@ class Database
         return $this->mysqli->query($query);
     }
 
+    /**
+     * Execute prepared SQL statement
+     * @param string $query
+     * @param string $types
+     * @param mixed $params
+     * @return bool
+     */
+    public function pquery(string $query, string $types, ...$params): bool
+    {
+        $q = $this->mysqli->prepare($query);
+        $q->bind_param($types, ...$params);
+        return $q->execute();
+    }
+
 }

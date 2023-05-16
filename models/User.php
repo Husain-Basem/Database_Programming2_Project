@@ -12,8 +12,8 @@ class User
     public $lastName;
     /// @var string
     public $username;
-    /// @var string $password Hashed password
-    public $password;
+    /// @var string password Hashed password
+    private $password;
     /// @var string
     public $email;
     /// @var string
@@ -25,7 +25,7 @@ class User
     /// @var string
     public $country;
 
-    public function __construct(
+    private function __construct(
         int    $userId,
         string $firstName,
         string $lastName,
@@ -49,17 +49,62 @@ class User
         $this->country=$country;
     }
 
-    public static function from_userId(int $userId): ?User
+    public static function register_user(
+        string $firstName,
+        string $lastName,
+        string $username,
+        string $plain_password,
+        string $email,
+        string $type,
+        ?string $description,
+        string $country
+    ): bool {
+        if (User::username_exists($username)) {
+            return false;
+        } else {
+            $password = password_hash($plain_password, PASSWORD_DEFAULT);
+            $date = date('Y-m-d\TH:i:s');
+
+            return Database::getInstance()->pquery(
+                'insert into Users (userId, firstName, lastName, username, password, email, type, 
+                                description, date, country)
+             values (?,?,?,?,?,?,?,?,?,?);',
+                'isssssssss',
+                null,
+                $firstName,
+                $lastName,
+                $username,
+                $password,
+                $email,
+                $type,
+                $description,
+                $date,
+                $country
+            );
+        }
+    }
+
+    public static function username_exists(string $username): bool
     {
-        $result = Database::getInstance()
-            ->query('select firstName,lastName,username,password,
+        $db = Database::getInstance();
+        return !empty($db
+          ->query("select username from Users where username = '" . $db->mysqli->real_escape_string($username) . "'")
+          ->fetch_row());
+    }
+
+    public static function from_username(string $username): ?User
+    {
+        $db = Database::getInstance();
+
+        $result = $db
+            ->query('select userId,firstName,lastName,username,password,
                             email,type,description,date,country 
-                     from `Users` where userId = ' . $userId);
+                     from `Users` where username = \'' . $db->mysqli->real_escape_string($username) . '\'');
 
         if ($result) {
             $row = $result->fetch_assoc();
             return new User(
-                $userId,
+                $row['userId'],
                 $row['firstName'],
                 $row['lastName'],
                 $row['username'],
@@ -82,13 +127,6 @@ class User
         return true;
     }
 
-    public function insert_user(): void
-    {
-        if ($this->is_valid()) {
-            // TODO: insert user
-        }
-    }
-
     public function delete_user(): void
     {
         // TODO: delete user
@@ -99,9 +137,19 @@ class User
         // TODO: update user
     }
 
+
+    public function set_password(string $plaintext): void
+    {
+        $this->password = password_hash($plaintext, PASSWORD_DEFAULT);
+    }
+
     public static function check_credentials(string $username, string $password): bool
     {
-        // TODO: validate hashed password
+        $user = User::from_username($username);
+        if ($user == null) {
+            return false;
+        }
+        return password_verify($password, $user->password);
     }
 
 
