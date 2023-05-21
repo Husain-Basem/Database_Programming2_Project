@@ -16,4 +16,12 @@ define("DB_USERNAME", "u20xxxxxxx");
 define("DB_PASSWORD", "u20xxxxxxx");
 ```
 
+## Built-in Users
 
+The following users are added by default:
+
+| Username | Password | Role   |
+| -------- | -------- | ------ |
+| bob      | 123      | Viewer |
+| tom      | 123      | Author |
+| admin1   | 123      | Admin  |
