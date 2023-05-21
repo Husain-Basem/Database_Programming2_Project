@@ -15,11 +15,17 @@ CREATE TABLE `Users`
 PRIMARY KEY (`userId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- Add builtin users
+INSERT INTO `Users` (`userId`, `firstName`, `lastName`, `userName`, `password`, `email`, `type`, `description`, `country`, `date`) VALUES
+(NULL, 'tom', 'tomson', 'tom', '$2y$10$g9w77TbXNRpN06KcD03e6OVvL.qvW8jWJz6QVNbNx5.Z6MSCibBxe', 'tom@tom.com', 'AUTHOR', 'Journalist based in bahrain', 'Bahrain', '2023-05-16 10:52:31'),
+(NULL, 'bob', 'bobson', 'bob', '$2y$10$ZVUkzGvaTQ5q55gRIMMl8uyh9ZmzAPR9OscieIchbuao0OgRcOW/6', 'bob@bob.com', 'VIEWER', NULL, 'Bahrain', '2023-05-21 11:46:09'),
+(NULL, 'Amin', 'AlAmin', 'admin1', '$2y$10$g9w77TbXNRpN06KcD03e6OVvL.qvW8jWJz6QVNbNx5.Z6MSCibBxe', 'amin@amin.com', 'ADMIN', NULL, 'Bahrain', '2023-05-21 15:11:57');
+
 CREATE TABLE `Articles`
 (
 `articleId` int(20) NOT NULL AUTO_INCREMENT ,
 `title` varchar(250) NOT NULL,
-`content` varchar(65535) NOT NULL,
+`content` TEXT NOT NULL,
 `readTime` int(250) NOT NULL,
 `writtenBy` int(20) NOT NULL,
 `date` date NOT NULL,
