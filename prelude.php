@@ -19,3 +19,6 @@ include_once PROJECT_ROOT . "/Database.php";
 spl_autoload_register(function ($c) {
     include_once PROJECT_ROOT . "/models/$c.php";
 });
+
+// start session
+session_start();

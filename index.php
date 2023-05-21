@@ -9,8 +9,9 @@ include 'header.html';
 
 
 <div class="container">
+<!--- some debugging  info. feel free to comment it out -->
     <p>
-        <?php echo "Database:";
+        <?php echo "Database: ";
 var_dump(Database::getInstance()->mysqli->get_server_info()) ?>
         <br>
         <?php echo "PROJECT_ROOT: " . PROJECT_ROOT  ?>
@@ -21,7 +22,7 @@ var_dump(Database::getInstance()->mysqli->get_server_info()) ?>
         <?php echo "Bob: ";
 var_dump(User::from_username('bob')) ?>
         <br>
-        <?= var_dump(User::username_exists('bob'), User::check_credentials('bob', '123')) ?>
+        <?= var_dump($_SESSION) ?>
        </p>
 </div>
 

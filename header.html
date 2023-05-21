@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?= $pageTitle?></title>
+    <link rel="stylesheet" href="<?= BASE_URL . '/bootstrap.min.css'?>" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <?= $pageTitle?>
-  </title>
-  <link rel="stylesheet" href="<?= BASE_URL . '/bootstrap.min.css'?>">
-</head>
+  <body>
 
-<body>
-
-  <nav class="navbar navbar-expand-lg mb-3" style="background-color:#e3f3fd">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link" href="<?= BASE_URL . '/index.php'?>">Home</a>
-          <a class="nav-link" href="<?= BASE_URL . '/local/index.php'?>">Local News</a>
-          <a class="nav-link" href="<?= BASE_URL . '/international/index.php'?>">International News</a>
-          <a class="nav-link" href="<?= BASE_URL . '/economy/index.php'?>">Economy</a>
-          <a class="nav-link" href="<?= BASE_URL . '/weather/index.php'?>">Weather Forecast</a>
-          <a class="nav-link" href="<?= BASE_URL . '/tourism/index.php'?>">Tourism</a>
-        </div>
-      </div>
+<nav class="navbar navbar-expand-lg mb-3" style="background-color: #e3f3fd">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="<?=BASE_URL?>">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/index.php'?>">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/local/index.php'?>">Local News</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/international/index.php'?>">
+              International News
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/economy/index.php'?>">Economy</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/weather/index.php'?>">Weather Forecast</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/tourism/index.php'?>">Tourism</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+       <?php include_once PROJECT_ROOT . '/user/navbar.php'?>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
