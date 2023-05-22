@@ -25,3 +25,26 @@ The following users are added by default:
 | bob      | 123      | Viewer |
 | tom      | 123      | Author |
 | admin1   | 123      | Admin  |
+
+## Progress
+
+- [ ] Users
+  - [x] Login, Logout & Register
+  - [x] Hashed passwords
+  - [x] Data validation
+  - [ ] User profile
+- [ ] Home page
+  - [x] Navbar
+  - [ ] Search bar
+  - [ ] News list
+- [ ] Search page
+- [ ] Comments and rating
+- [ ] Author panel
+  - [ ] Add/Edit articles
+  - [ ] File upload
+- [ ] Admin panel
+  - [ ] Manage users
+  - [ ] Manage all news articles
+  - [ ] Manage Comments
+- [ ] Display news article page
+- [ ] Admin report dashboard

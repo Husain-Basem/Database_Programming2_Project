@@ -101,8 +101,8 @@ class User
                             email,type,description,date,country 
                      from `Users` where username = \'' . $db->mysqli->real_escape_string($username) . '\'');
 
-        if ($result) {
-            $row = $result->fetch_assoc();
+        $row = $result->fetch_assoc();
+        if ($row != null) {
             return new User(
                 $row['userId'],
                 $row['firstName'],

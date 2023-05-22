@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?= $pageTitle?></title>
-    <link rel="stylesheet" href="<?= BASE_URL . '/bootstrap.min.css'?>" />
+    <link rel="stylesheet" href="<?= BASE_URL . '/css/bootstrap.min.css'?>" />
+    <script src="<?= BASE_URL . '/js/jquery-3.7.0.min.js'?>"></script>
+    <script src="<?= BASE_URL . '/js/bootstrap.bundle.min.js'?>"></script>
   </head>
 
   <body>
@@ -45,3 +47,28 @@
     </div>
   </div>
 </nav>
+
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+  <!-- Position it: -->
+  <!-- - `.toast-container` for spacing between toasts -->
+  <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
+  <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+  <div class="toast-container top-0 end-0 p-3">
+
+    <!-- Then put toasts within -->
+      <?php
+      foreach ($_SESSION['toasts'] as $toast) {
+          echo '
+      <div class="toast text-bg-'.$toast['type'].'" role="alert" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">'.$toast['msg'].'</div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+      ';
+      }
+      unset($_SESSION['toasts']);
+    ?>
+
+  </div>
+</div>
