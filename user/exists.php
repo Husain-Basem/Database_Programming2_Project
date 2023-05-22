@@ -1,6 +1,6 @@
 <?php
 
-include_once '../prelude.php';
+include_once '../models/User.php';
 
 if (isset($_GET['u'])) {
     if (User::username_exists($_GET['u'])) {

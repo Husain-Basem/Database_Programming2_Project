@@ -3,7 +3,7 @@
 declare(strict_types=1);
 ini_set('show_errors', 'On');
 ini_set('display_errors', '1');
-error_reporting(E_ALL & ~E_WARNING);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
 // Project root i.e. /home/u202001264/DBProject
 define("PROJECT_ROOT", __DIR__);
