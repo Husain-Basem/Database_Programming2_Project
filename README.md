@@ -20,7 +20,8 @@ define("DB_PASSWORD", "u20xxxxxxx");
 
 The following users are added by default:
 
-| Username | Password | Role |
-| bob | 123 | Viewer |
-| tom | 123 | Author |
-| admin1 | 123 | Admin |
+| Username | Password | Role   |
+| -------- | -------- | ------ |
+| bob      | 123      | Viewer |
+| tom      | 123      | Author |
+| admin1   | 123      | Admin  |
