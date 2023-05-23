@@ -39,20 +39,43 @@ class Comment
         return true;
     }
 
-    public function insert_user(): void
+    public function insert_comment(): ?int
     {
         if ($this->is_valid()) {
-            // TODO: insert comment
+            $date = date('Y-m-d\TH:i:s');
+            $db = Database::getInstance();
+            return $db->pquery_insert(
+                'insert into Comments values (NULL,?,?,?,?,?)',
+                'ssisi',
+                $this->comment,
+                $this->rating,
+                $this->reviewBy,
+                $date,
+                $this->articleId
+            );
         }
     }
 
-    public function delete_user(): void
+    public function delete_comment(): bool
     {
-        // TODO: delete comment
+        $db = Database::getInstance();
+        return $db->pquery('delete from Comments where commentId = ?', 'i', $this->commentId);
     }
 
-    public function update_user(): void
+    public function update_comment(): bool
     {
-        // TODO: update comment
+        $date = date('Y-m-d\TH:i:s');
+        $db = Database::getInstance();
+        return $db->pquery(
+            'update Comments set comment = ?, rating = ?, reviewBy = ?,
+                    date = ?, articleId = ?) where commentId = ?',
+            'ssisii',
+            $this->comment,
+            $this->rating,
+            $this->reviewBy,
+            $this->date,
+            $this->articleId,
+            $this->commentId
+        );
     }
 }

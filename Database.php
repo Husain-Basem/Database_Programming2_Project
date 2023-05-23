@@ -54,4 +54,23 @@ class Database
         return $q->execute();
     }
 
+    /**
+     * Execute prepared SQL statement, return insert_id
+     * @param string $query
+     * @param string $types
+     * @param mixed $params
+     * @return ?int
+     */
+    public function pquery_insert(string $query, string $types, ...$params): ?int
+    {
+        $q = $this->mysqli->prepare($query);
+        $q->bind_param($types, ...$params);
+        $success =  $q->execute();
+        if (!$success) {
+            return null;
+        } else {
+            return $q->insert_id;
+        }
+    }
+
 }
