@@ -29,6 +29,8 @@ CREATE TABLE `Articles`
 `readTime` int(250) NOT NULL,
 `writtenBy` int(20) NOT NULL,
 `date` date NOT NULL,
+`category` varchar(50) NOT NULL,
+`published` boolean NOT NULL
 PRIMARY KEY (`articleId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
