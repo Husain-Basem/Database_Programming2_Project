@@ -121,20 +121,35 @@ class User
 
     }
 
+    public function is_viewer(): bool
+    {
+        return $this->type == 'VIEWER';
+    }
+    public function is_author(): bool
+    {
+        return $this->type == 'AUTHOR';
+    }
+    public function is_admin(): bool
+    {
+        return $this->type == 'ADMIN';
+    }
+
     public function is_valid(): bool
     {
         // TODO: validate user
         return true;
     }
 
-    public function delete_user(): void
+    public function delete_user(): bool
     {
-        // TODO: delete user
+        $db = Database::getInstance();
+        return $db->pquery('delete from Users where userId = ?', 'i', $this->userId);
     }
 
-    public function update_user(): void
+    public function update_user(): bool
     {
-        // TODO: update user
+        $db = Database::getInstance();
+        return $db->pquery('update Users set email = ?, description = ? where userId = ?', 'ssi', $this->email, $this->description, $this->userId);
     }
 
 

@@ -28,11 +28,11 @@ The following users are added by default:
 
 ## Progress
 
-- [ ] Users
+- [x] Users
   - [x] Login, Logout & Register
   - [x] Hashed passwords
   - [x] Data validation
-  - [ ] User profile
+  - [x] User profile
 - [ ] Home page
   - [x] Navbar
   - [ ] Search bar
