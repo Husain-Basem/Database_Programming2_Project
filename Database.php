@@ -16,7 +16,7 @@ class Database
     private function __construct()
     {
         if ($this->mysqli == null) {
-            $this->mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+            $this->mysqli = new mysqli(localhost, u202003462, u202003462, db202003462);
         }
     }
 
@@ -35,11 +35,17 @@ class Database
      * @param string $query
      * @return mysqli_result|bool
      */
-    public function query(string $query): object
-    {
-        return $this->mysqli->query($query);
+//    public function query(string $query): object
+//    {
+//        return $this->mysqli->query($query);
+//    }
+public function query($sql) {
+    $result = $this->mysqli->query($sql);
+    if (!$result) {
+        die("Error executing query: " . $this->mysqli->error);
     }
-
+    return $result;
+}
     /**
      * Execute prepared SQL statement
      * @param string $query
