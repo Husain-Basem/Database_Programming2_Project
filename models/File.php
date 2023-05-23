@@ -81,7 +81,7 @@ class File
         if ($this->is_valid()) {
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
-            return $db->pquery_insert(
+            $id = $db->pquery_insert(
                 'insert into Files values (NULL,?,?,?,?,?,?)',
                 'ssssii',
                 $this->fileName,
@@ -91,6 +91,7 @@ class File
                 $this->articleId,
                 $this->userId
             );
+            return $id;
         }
     }
 

@@ -44,7 +44,7 @@ class Comment
         if ($this->is_valid()) {
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
-            return $db->pquery_insert(
+            $id = $db->pquery_insert(
                 'insert into Comments values (NULL,?,?,?,?,?)',
                 'ssisi',
                 $this->comment,
@@ -53,6 +53,7 @@ class Comment
                 $date,
                 $this->articleId
             );
+            return $id;
         }
     }
 
