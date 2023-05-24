@@ -1,6 +1,8 @@
 <?php
+
 // Start a new PHP session
-session_start();
+// Already done in prelude.php
+// session_start();
 
 // Include the configuration file
 include_once '../prelude.php';
@@ -17,15 +19,13 @@ $reviewBy = $_POST['reviewBy'];
 $comment = $_POST['comment'];
 
 // Insert the comment data into the database
-$sql = "INSERT INTO comments (articleId, reviewBy, comment) VALUES (?, ?, ?)";
-$success = $db->pquery($sql, "iss", $Yes);
+$sql = "INSERT INTO Comments (articleId, reviewBy, comment, date) VALUES (?, ?, ?, ?)";
+$success = $db->pquery($sql, "isss", $article_id, $reviewBy, $comment, date('Y-m-d\TH:i:s'));
 
 // Check for errors
-if (!$result) {
-    die("Error adding comment: " . mysqli_error($conn));
+if (!$success) {
+    die("Error adding comment: " . mysqli_error($db->mysqli));
 }
 
 // Redirect the user back to the article page
-header("Location: article.php?id=$article_id");
-?>
-
+header('Location: ' . BASE_URL . "/displayNews/article.php?id=$article_id");

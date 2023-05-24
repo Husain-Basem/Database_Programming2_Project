@@ -1,6 +1,7 @@
 <?php
 // Start a new PHP session
-session_start();
+// Already done in prelude.php
+// session_start();
 
 include_once '../prelude.php';
 
@@ -17,13 +18,8 @@ if ($db->mysqli->connect_errno) {
 $article_id = $_GET['id'];
 
 // Query the database to retrieve the article data
-$sql = "SELECT * FROM articles WHERE id = $article_id";
+$sql = "SELECT * FROM Articles WHERE articleId = $article_id ";
 $result = $db->query($sql);
-if (!$result) {
-    die("Error retrieving article data: " . $db->mysqli->error);
-}
-
-// Check for errors
 if (!$result) {
     die("Error retrieving article data: " . $db->mysqli->error);
 }
@@ -32,7 +28,10 @@ if (!$result) {
 $article = $result->fetch_assoc();
 
 // Query the database to retrieve the comments data
-$sql = "SELECT * FROM comments WHERE articleId = $article_id ORDER BY created_at DESC";
+$sql = "SELECT Comments.*, Users.userName 
+        FROM Comments JOIN Users on Comments.reviewBy = Users.userId
+        WHERE articleId = $article_id
+        ORDER BY date DESC;";
 $result = $db->query($sql);
 
 // Check for errors
@@ -42,13 +41,13 @@ if (!$result) {
 
 // Retrieve the comments data
 $comments = $result->fetch_all(MYSQLI_ASSOC);
+
+// use the website header
+$pageTitle = $article['title'];
+include PROJECT_ROOT . '/header.html';
 ?>
 
-<html>
-<head>
-    <title><?php echo $article['title']; ?></title>
-</head>
-<body>
+<div class="container">
     <h1><?php echo $article['title']; ?></h1>
     <p><?php echo $article['content']; ?></p>
     <?php if ($article['image']) { ?>
@@ -77,7 +76,7 @@ $comments = $result->fetch_all(MYSQLI_ASSOC);
         <ul>
             <?php foreach ($comments as $comment) { ?>
                 <li>
-                    <p><strong><?php echo $comment['name']; ?></strong> on <?php echo date('F j, Y g:i a', strtotime($comment['created_at'])); ?>:</p>
+                    <p><strong><?php echo $comment['userName']; ?></strong> on <?php echo date('F j, Y g:i a', strtotime($comment['date'])); ?>:</p>
                     <p><?php echo $comment['comment']; ?></p>
                 </li>
             <?php } ?>
@@ -90,9 +89,10 @@ $comments = $result->fetch_all(MYSQLI_ASSOC);
 
     <?php if (isset($_SESSION['username'])) { ?>
         <form action="add_comment.php" method="POST">
-            <input type="hidden" name="article_id" value="<?php echo $article_id; ?>">
+            <input type="hidden" name="articleId" value="<?php echo $article_id; ?>">
             <label for="name">Name:</label>
             <input type="text" name="name" id="name" value="<?php echo $_SESSION['username']; ?>" readonly>
+            <input type="hidden" name="reviewBy" id="reviewBy" value="<?php echo $_SESSION['userId']; ?>">
             <br>
             <label for="comment">Comment:</label>
             <textarea name="comment" id="comment" rows="5" required></textarea>
@@ -100,9 +100,8 @@ $comments = $result->fetch_all(MYSQLI_ASSOC);
             <input type="submit" value="Submit">
         </form>
     <?php } else { ?>
-        <p>You must be logged in to leave a comment. <a href="login.php">Click here to log in</a>.</p>
+    <p>You must be logged in to leave a comment. <a href="<?= BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']) ?>">Click here to log in</a>.</p>
     <?php } ?>
-</body>
-</html>
+</div>
 
-
+<?php include PROJECT_ROOT . '/footer.html' ?>

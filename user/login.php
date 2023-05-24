@@ -10,9 +10,14 @@ if (isset($_POST['submitted'])) {
     $success = User::check_credentials($_POST['username'], $_POST['password']);
     if ($success) {
         $_SESSION['username'] = $_POST['username'];
+        $_SESSION['userId'] = User::from_username($_POST['username'])->userId;
         $_SESSION['toasts'][] = array( 'type' => 'success', 'msg' => 'Successfully logged in' );
         session_write_close();
-        header("Location: ".BASE_URL."/index.php");
+        if (isset($_POST['redirect'])) {
+            header('Location: ' . $_POST['redirect']);
+        } else {
+            header('Location: ' . BASE_URL . '/index.php');
+        }
     } else {
         $error = '
 <div class="alert alert-danger" role="alert">
@@ -45,6 +50,10 @@ include PROJECT_ROOT . '/header.html';
 
 <button class="w-100 btn btn-primary" type="submit">Submit</button>
 <input type="text" name="submitted" value="submitted" hidden>
+<?php if (isset($_GET['redirect'])) {
+    echo '<input type="text" name="redirect" value="' . $_GET['redirect'] . '" hidden>';
+}
+?>
 </form>
 
 </div>

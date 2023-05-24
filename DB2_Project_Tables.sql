@@ -28,7 +28,7 @@ CREATE TABLE `Articles`
 `content` TEXT NOT NULL,
 `readTime` int(250) NOT NULL,
 `writtenBy` int(20) NOT NULL,
-`date` date NOT NULL,
+`date` datetime NOT NULL,
 `category` varchar(50) NOT NULL,
 `published` boolean NOT NULL
 PRIMARY KEY (`articleId`)
@@ -40,7 +40,7 @@ CREATE TABLE `Comments`
 `comment` varchar(32000),
 `rating` varchar(250),
 `reviewBy` int(20) NOT NULL,
-`date` date NOT NULL,
+`date` datetime NOT NULL,
 `articleId` int(20),
 PRIMARY KEY (`commentId`),
 FOREIGN KEY (articleId) REFERENCES Articles(articleId)
