@@ -30,7 +30,7 @@ CREATE TABLE `Articles`
 `writtenBy` int(20) NOT NULL,
 `date` datetime NOT NULL,
 `category` varchar(50) NOT NULL,
-`published` boolean NOT NULL
+`published` boolean NOT NULL,
 PRIMARY KEY (`articleId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

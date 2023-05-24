@@ -19,7 +19,7 @@ class File
     /// @var int
     public $userId;
 
-    public function __construct(
+    private function __construct(
         ?int $fileId,
         string $fileName,
         string $fileType,
@@ -42,33 +42,56 @@ class File
         // TODO: validate file
         return true;
     }
+    /**
+     * @return array<File>
+     */
+    public static function get_files(int $articleId): array
+    {
+        $db = Database::getInstance();
+        $files = $db->query("select * from Files where articleId = $articleId")->fetch_all(MYSQLI_ASSOC);
+        $files = array_map(function ($file) {
+            return new File(
+                $file['fileId'],
+                $file['fileName'],
+                $file['fileType'],
+                $file['fileLocation'],
+                $file['downloadable'],
+                $file['articleId'],
+                $file['userId']
+            );
+        }, $files);
+        return $files;
+
+    }
 
     /**
      * Upload file and insert into database
      *
-     * Usage:
-     *
-     * ```php
-     * // last three arguments are the important
-     * $file = new File(null,'','','',false,1,2);
-     * $fileLocation = $file->upload_file('pic');
-     * ```
-     *
-     * @return string|null
+     * @return File|null
      */
-    public function upload_file(string $formname): ?string
+    public static function upload_file(string $formname, bool $attachment, int $articleId, int $userId): ?File
     {
         if (isset($_FILES[$formname])) {
-            $location = PROJECT_ROOT . "/uploads/{$_FILES[$formname]['name']}";
+            $fileName = $_FILES[$formname]['name'];
+            $location = PROJECT_ROOT . "/uploads/$fileName";
             if (file_exists($location)) {
-                $location = PROJECT_ROOT . '/uploads/' . random_int() . $_FILES[$formname]['name'];
+                $fileName = random_int(1, 10000) . $_FILES[$formname]['name'];
+                $location = PROJECT_ROOT . '/uploads/' . $fileName;
             }
             if (move_uploaded_file($_FILES[$formname]['tmp_name'], $location)) {
-                $this->fileName = $_FILES[$formname]['name'];
-                $this->fileLocation = $location;
-                $this->fileType = $_FILES[$formname]['type'];
-                $this->insert_file();
-                return $location;
+                $fileLocation = $location;
+                $fileType = $_FILES[$formname]['type'];
+                $fileObj = new File(
+                    null,
+                    $fileName,
+                    $fileType,
+                    $fileLocation,
+                    $attachment,
+                    $articleId,
+                    $userId
+                );
+                $fileObj->insert_file();
+                return $fileObj;
             }
         }
 
@@ -83,7 +106,7 @@ class File
             $db = Database::getInstance();
             $id = $db->pquery_insert(
                 'insert into Files values (NULL,?,?,?,?,?,?)',
-                'ssssii',
+                'sssiii',
                 $this->fileName,
                 $this->fileType,
                 $this->fileLocation,
@@ -91,6 +114,7 @@ class File
                 $this->articleId,
                 $this->userId
             );
+            $this->fileId = $id;
             return $id;
         }
     }
@@ -118,5 +142,10 @@ class File
             $this->userId,
             $this->fileId
         );
+    }
+
+    public function get_url(): string
+    {
+        return "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}".BASE_URL."/uploads/$this->fileName";
     }
 }
