@@ -23,16 +23,17 @@ INSERT INTO `Users` (`userId`, `firstName`, `lastName`, `userName`, `password`, 
 
 CREATE TABLE `Articles`
 (
-`articleId` int(20) NOT NULL AUTO_INCREMENT ,
+`articleId` int(20) NOT NULL AUTO_INCREMENT,
 `title` varchar(250) NOT NULL,
-`content` TEXT NOT NULL,
+`content` MEDIUMTEXT NOT NULL,
 `readTime` int(250) NOT NULL,
 `writtenBy` int(20) NOT NULL,
 `date` datetime NOT NULL,
 `category` varchar(50) NOT NULL,
 `published` boolean NOT NULL,
-PRIMARY KEY (`articleId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+PRIMARY KEY (`articleId`),
+FULLTEXT KEY (`title`,`content`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 CREATE TABLE `Comments`
 (
