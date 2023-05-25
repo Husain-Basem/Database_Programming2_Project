@@ -47,9 +47,10 @@ $pageTitle = $article['title'];
 include PROJECT_ROOT . '/header.html';
 ?>
 
+
 <div class="container">
     <h1><?php echo $article['title']; ?></h1>
-    <div class="ql-snow">
+    <div class="ql-snow clearfix">
         <div class="ql-editor">
            <?php echo $article['content']; ?>
         </div>

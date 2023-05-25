@@ -1,0 +1,17 @@
+.ql-container {
+    font-family: unset !important;
+    font-size: unset !important;
+}
+
+.ql-editor {
+    overflow-y: auto;
+}
+
+.ql-editor img {
+    height: auto;
+    max-width: 100%;
+}
+
+.ql-editor p {
+    margin-bottom: 0;
+}

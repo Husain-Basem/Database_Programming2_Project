@@ -18,11 +18,6 @@ include PROJECT_ROOT . '/header.html';
 
 ?>
 
-<style>
-  #output img {
-    width: 100%;
-  }
-</style>
 
 <div class="container">
   <div class="row align-items-center mb-3">
@@ -41,11 +36,15 @@ include PROJECT_ROOT . '/header.html';
       <button id="saveBtn" class="btn btn-primary">Save</button>
       <button id="deleteBtn" class="btn btn-danger ms-auto" data-bs-toggle="modal"
         data-bs-target="#deleteModal">Delete</button>
-      <button id="publishBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#publishModal">Publish</button>
+      <button id="publishBtn" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#publishModal">Publish</button>
     </div>
   </div>
-  <div id="editor">
-    <?= $article->content ?>
+
+  <div class="d-flex flex-column" style="max-height: calc(100vh - 9rem)">
+    <div id="editor" class="h-100 overflow-auto">
+    </div>
+    <pre id="template" class="visually-hidden"><?= $article->content ?></pre>
   </div>
 
   <!-- Delete Modal -->
@@ -88,7 +87,7 @@ include PROJECT_ROOT . '/header.html';
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
           <form action="<?= BASE_URL . '/articleEdit/publish_article.php' ?>" method="post">
-            <button type="submit" class="btn btn-primary">Publish</button>
+            <button id="publishSubmit" type="submit" class="btn btn-primary">Publish</button>
             <input type="hidden" name="articleId" value="<?= $article->articleId ?>">
           </form>
         </div>
@@ -147,6 +146,10 @@ include PROJECT_ROOT . '/header.html';
       placeholder: 'Write an article...',
       theme: 'snow',
     });
+    console.log(quill);
+    quill.root.innerHTML = $('#template').html();
+    $('#template').remove();
+
 
     // save article using AJAX with JQuery
     $('#saveBtn').on('click', function () {
@@ -178,6 +181,8 @@ include PROJECT_ROOT . '/header.html';
           new bootstrap.Toast($('.toast'), { delay: 1000 }).show();
         });
     });
+
+    $('#publishBtn').on('click', () => { $('#saveBtn').trigger('click') });
 
   });
 </script>
