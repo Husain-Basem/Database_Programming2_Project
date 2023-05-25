@@ -49,7 +49,11 @@ include PROJECT_ROOT . '/header.html';
 
 <div class="container">
     <h1><?php echo $article['title']; ?></h1>
-    <p><?php echo $article['content']; ?></p>
+    <div class="ql-snow">
+        <div class="ql-editor">
+           <?php echo $article['content']; ?>
+        </div>
+    </div>
     <?php if ($article['image']) { ?>
         <img src="<?php echo $article['image']; ?>" alt="<?php echo $article['title']; ?>">
     <?php } ?>

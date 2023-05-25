@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 include_once PROJECT_ROOT . '/prelude.php';
+include_once 'mysqli';
 
 // include database connection settings
 require_once PROJECT_ROOT . '/../connectionSettings.php';
@@ -32,18 +33,24 @@ class Database
     {
         $this->mysqli->close();
     }
+
+    public function escape(string $string): string
+    {
+        return $this->mysqli->real_escape_string($string);
+    }
+
     /**
      * @param string $query
      * @return mysqli_result|bool
      */
-     public function query(string $sql): object
-     {
-         $result = $this->mysqli->query($sql);
-         if (!$result) {
-             die("Error executing query: " . $this->mysqli->error);
-         }
-         return $result;
-     }
+    public function query(string $sql): object
+    {
+        $result = $this->mysqli->query($sql);
+        if (!$result) {
+            die("Error executing query: " . $this->mysqli->error);
+        }
+        return $result;
+    }
 
     /**
      * Execute prepared SQL statement
@@ -70,7 +77,7 @@ class Database
     {
         $q = $this->mysqli->prepare($query);
         $q->bind_param($types, ...$params);
-        $success =  $q->execute();
+        $success = $q->execute();
         if (!$success) {
             return null;
         } else {

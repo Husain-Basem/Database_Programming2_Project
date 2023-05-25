@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 include_once '../prelude.php';
 
@@ -7,7 +8,7 @@ class Article
     /// @var int
     public $articleId;
     /// @var string
-    public $title ;
+    public $title;
     /// @var string
     public $content;
     /// @var int
@@ -48,6 +49,54 @@ class Article
     }
 
     /**
+     * @return Article|null
+     */
+    public static function from_articleId(int $articleId): ?Article
+    {
+        $db = Database::getInstance();
+        $result = $db->query("select * from Articles where articleId = $articleId");
+        if ($result != null) {
+            $article = $result->fetch_assoc();
+            return new Article(
+                (int)$article['articleId'],
+                $article['title'],
+                $article['content'],
+                (int)$article['readTime'],
+                (int)$article['writtenBy'],
+                $article['date'],
+                $article['category'],
+                (bool)$article['published']
+            );
+
+        } else
+            return null;
+
+    }
+
+    /**
+     * @return array<Article>
+     */
+    public static function get_author_articles(int $authorId, bool $published = false): array
+    {
+        $db = Database::getInstance();
+        $articles = $db->query('select * from Articles where writtenBy = ' . $authorId . ' 
+                                   and published = ' . (int) $published . '
+                                   order by date desc')->fetch_all(MYSQLI_ASSOC);
+        return array_map(function ($article) {
+            return new Article(
+                (int)$article['articleId'],
+                $article['title'],
+                $article['content'],
+                (int)$article['readTime'],
+                (int)$article['writtenBy'],
+                $article['date'],
+                $article['category'],
+                (bool)$article['published']
+            );
+        }, $articles);
+    }
+
+    /**
      * @return ?int inserted article id or null
      */
     public function insert_article(): ?int
@@ -57,7 +106,7 @@ class Article
             $db = Database::getInstance();
             $id = $db->pquery_insert(
                 'insert into Articles values (NULL,?,?,?,?,?,?,?)',
-                'ssiisss',
+                'ssiissi',
                 $this->title,
                 $this->content,
                 $this->readTime,
@@ -66,14 +115,15 @@ class Article
                 $this->category,
                 $this->published
             );
+            $this->articleId = $id;
             return $id;
         }
     }
 
-    public function delete_article(): bool
+    public static function delete_article(int $articleId): bool
     {
         $db = Database::getInstance();
-        return $db->pquery('delete from Articles where articleId = ?', 'i', $this->articleId);
+        return $db->pquery('delete from Articles where articleId = ?', 'i', $articleId);
     }
 
     public function update_article(): bool
@@ -87,7 +137,7 @@ class Article
               writtenBy = ?, date = ?, category = ?,
               published = ?
           where articleId = ?',
-            'ssiisssi',
+            'ssiissii',
             $this->title,
             $this->content,
             $this->readTime,
@@ -98,4 +148,24 @@ class Article
             $this->articleId
         );
     }
+
+    public function display_category(): string
+    {
+        switch ($this->category) {
+            case 'local':
+                return 'Local News';
+            case 'international':
+                return 'International News';
+            case 'economy':
+                return 'Economy News';
+            case 'weather':
+                return 'Weather Forecasts';
+            case 'tourism':
+                return 'Tourism';
+            default:
+                return '';
+        }
+
+    }
+
 }
