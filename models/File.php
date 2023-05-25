@@ -10,8 +10,8 @@ class File
     public $fileName;
     /// @var string
     public $fileType;
-    /// @var string
-    public $fileLocation;
+    /// @var string $fileLocation    absolute file path where the root is this project's root. e.g. /uploads/file1.txt
+    private $fileLocation;
     /// @var bool
     public $downloadable;
     /// @var int
@@ -35,6 +35,12 @@ class File
         $this->downloadable = $downloadable;
         $this->articleId = $articleId;
         $this->userId = $userId;
+    }
+
+    /// gets the absolute file path. e.g. /home/u202001264/public_html/DBProj/uploads/file1.txt
+    public function get_fileLocation(): string
+    {
+        return PROJECT_ROOT . $this->fileLocation;
     }
 
     public function is_valid(): bool
@@ -85,7 +91,7 @@ class File
                     null,
                     $fileName,
                     $fileType,
-                    $fileLocation,
+                    '/uploads/' . $fileName,
                     $attachment,
                     $articleId,
                     $userId
@@ -146,6 +152,6 @@ class File
 
     public function get_url(): string
     {
-        return "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}".BASE_URL."/uploads/$this->fileName";
+        return "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}" . BASE_URL . $this->fileLocation;
     }
 }

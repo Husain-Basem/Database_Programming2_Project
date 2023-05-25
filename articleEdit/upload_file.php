@@ -2,7 +2,7 @@
 
 include_once '../prelude.php';
 
-$file = File::upload_file('myFile', false, 1, 1);
+$file = File::upload_file('myFile', false, $_POST['articleId'], $_POST['userId']);
 
 if ($file == null) {
     echo 'ERROR';

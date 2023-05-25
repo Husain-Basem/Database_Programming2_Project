@@ -127,6 +127,8 @@ include PROJECT_ROOT . '/header.html';
             return new Promise((resolve, reject) => {
               let formData = new FormData();
               formData.append('myFile', file);
+              formData.append('userId', <?= $_SESSION['userId'] ?>);
+              formData.append('articleId', <?= $_GET['articleId'] ?>);
               $.ajax({
                 type: 'POST',
                 url: '<?= BASE_URL ?>/articleEdit/upload_file.php',
