@@ -11,7 +11,7 @@ class File
     /// @var string
     public $fileType;
     /// @var string $fileLocation    absolute file path where the root is this project's root. e.g. /uploads/file1.txt
-    private $fileLocation;
+    public $fileLocation;
     /// @var bool
     public $downloadable;
     /// @var int
@@ -38,7 +38,7 @@ class File
     }
 
     /// gets the absolute file path. e.g. /home/u202001264/public_html/DBProj/uploads/file1.txt
-    public function get_fileLocation(): string
+    public function get_absolute_fileLocation(): string
     {
         return PROJECT_ROOT . $this->fileLocation;
     }

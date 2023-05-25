@@ -122,27 +122,7 @@ include PROJECT_ROOT . '/header.html';
     var quill = new Quill('#editor', {
       modules: {
         toolbar: toolbarOptions,
-        imageUploader: {
-          upload: (file) => {
-            return new Promise((resolve, reject) => {
-              let formData = new FormData();
-              formData.append('myFile', file);
-              formData.append('userId', <?= $_SESSION['userId'] ?>);
-              formData.append('articleId', <?= $_GET['articleId'] ?>);
-              $.ajax({
-                type: 'POST',
-                url: '<?= BASE_URL ?>/articleEdit/upload_file.php',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: (filepath) => {
-                  resolve(filepath);
-                },
-              });
-            });
-          },
-        },
+        imageUploader: { upload: uploader },
         blotFormatter: {}
       },
       placeholder: 'Write an article...',
@@ -151,6 +131,40 @@ include PROJECT_ROOT . '/header.html';
     console.log(quill);
     quill.root.innerHTML = $('#template').html();
     $('#template').remove();
+
+    function uploader(file) {
+      return new Promise((resolve, reject) => {
+        let formData = new FormData();
+        formData.append('myFile', file);
+        formData.append('userId', <?= $_SESSION['userId'] ?>);
+        formData.append('articleId', <?= $_GET['articleId'] ?>);
+        $.ajax({
+          type: 'POST',
+          url: '<?= BASE_URL ?>/articleEdit/upload_file.php',
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          statusCode: {
+            200: (filepath) => { resolve('..' + filepath); },
+            201: (msg) => {
+              reject();
+              $('.toast-container').append(`
+                    <div id="uploadToast" class="toast text-bg-danger" role="alert" aria-live="polite" aria-atomic="true">
+                      <div class="d-flex">
+                        <div class="toast-body">Upload Failed: ${msg}</div>
+                        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  `);
+              $('#uploadToast').on('hidden.bs.toast', function () { $(this).remove(); });
+              const toast = new bootstrap.Toast($('#uploadToast'), { delay: 3000 });
+              toast.show();
+            }
+          }
+        });
+      });
+    }
 
 
     // save article using AJAX with JQuery
@@ -163,7 +177,7 @@ include PROJECT_ROOT . '/header.html';
       })
         .done(() => {
           $('.toast-container').append(`
-              <div class="toast text-bg-success" role="alert" aria-live="polite" aria-atomic="true">
+              <div id="saveToast" class="toast text-bg-success" role="alert" aria-live="polite" aria-atomic="true">
                 <div class="d-flex">
                   <div class="toast-body">Successfully Saved</div>
                   <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -172,7 +186,7 @@ include PROJECT_ROOT . '/header.html';
             `);
         }).fail(() => {
           $('.toast-container').append(`
-              <div class="toast text-bg-danger" role="alert" aria-live="polite" aria-atomic="true">
+              <div id="saveToast" class="toast text-bg-danger" role="alert" aria-live="polite" aria-atomic="true">
                 <div class="d-flex">
                   <div class="toast-body">Couldn't Save</div>
                   <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -180,7 +194,9 @@ include PROJECT_ROOT . '/header.html';
               </div>
             `);
         }).always(() => {
-          new bootstrap.Toast($('.toast'), { delay: 1000 }).show();
+          $('#saveToast').on('hidden.bs.toast', function () { $(this).remove(); });
+          const toast = new bootstrap.Toast($('#saveToast'), { delay: 1000 });
+          toast.show();
         });
     });
 
