@@ -19,6 +19,7 @@ class Database
         if ($this->mysqli == null) {
             // DO NOT EDIT THIS; EDIT IN /home/u20xxxxxxx/public_html/connectionSettings.php
             $this->mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+            $this->mysqli->set_charset('utf8mb4');
         }
     }
 
