@@ -6,7 +6,7 @@ $pageTitle = 'News';
 include 'header.html';
 
 ?>
-
+<a href="<?= BASE_URL . '/Search/search.php'?>">Search</a> <!-- Add link to Search Page -->
 
 <div class="container">
 <!--- some debugging  info. feel free to comment it out -->
