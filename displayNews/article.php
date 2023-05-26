@@ -44,16 +44,19 @@ $comments = $result->fetch_all(MYSQLI_ASSOC);
 
 // use the website header
 $pageTitle = $article['title'];
+$headerIncludes = '<link rel="stylesheet" href="' . BASE_URL . '/css/quill.snow.css" />';
 include PROJECT_ROOT . '/header.html';
 ?>
 
 
 <div class="container">
     <h1><?php echo $article['title']; ?></h1>
+    <div class="ql-container">
     <div class="ql-snow clearfix">
         <div class="ql-editor">
            <?php echo $article['content']; ?>
         </div>
+    </div>
     </div>
     <?php if ($article['image']) { ?>
         <img src="<?php echo $article['image']; ?>" alt="<?php echo $article['title']; ?>">
