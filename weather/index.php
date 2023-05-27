@@ -10,6 +10,8 @@ include '../header.html';
 
 <div class="container">
   <h2>Weather Forecast</h2>
+  <iframe class="w-100" src="https://wttr.in"
+    style="height: calc(100vh - 9rem)"></iframe>
 </div>
 
 <?php
@@ -17,4 +19,3 @@ include '../header.html';
 include '../footer.html';
 
 ?>
-
