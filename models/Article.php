@@ -21,6 +21,8 @@ class Article
     public $category;
     /// @var bool
     public $published;
+    /// @var string
+    public $thumbnail;
 
     public function __construct(
         ?int $articleId,
@@ -30,7 +32,8 @@ class Article
         int $writtenBy,
         string $date,
         string $category,
-        bool $published
+        bool $published,
+        ?string $thumbnail
     ) {
         $this->articleId = $articleId;
         $this->title = $title;
@@ -40,6 +43,7 @@ class Article
         $this->date = $date;
         $this->category = $category;
         $this->published = $published;
+        $this->thumbnail = $thumbnail;
     }
 
     public function is_valid(): bool
@@ -65,7 +69,8 @@ class Article
                 (int)$article['writtenBy'],
                 $article['date'],
                 $article['category'],
-                (bool)$article['published']
+                (bool)$article['published'],
+                $article['thumbnail']
             );
 
         } else
@@ -91,7 +96,8 @@ class Article
                 (int)$article['writtenBy'],
                 $article['date'],
                 $article['category'],
-                (bool)$article['published']
+                (bool)$article['published'],
+                $article['thumbnail']
             );
         }, $articles);
     }
@@ -105,15 +111,16 @@ class Article
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
             $id = $db->pquery_insert(
-                'insert into Articles values (NULL,?,?,?,?,?,?,?)',
-                'ssiissi',
+                'insert into Articles values (NULL,?,?,?,?,?,?,?,?)',
+                'ssiissis',
                 $this->title,
                 $this->content,
                 $this->readTime,
                 $this->writtenBy,
                 $date,
                 $this->category,
-                $this->published
+                $this->published,
+                $this->thumbnail
             );
             $this->articleId = $id;
             return $id;
@@ -135,9 +142,9 @@ class Article
             'update Articles 
           set title = ?, content = ?, readTime = ?,
               writtenBy = ?, date = ?, category = ?,
-              published = ?
+              published = ?, thumbnail = ?
           where articleId = ?',
-            'ssiissii',
+            'ssiissisi',
             $this->title,
             $this->content,
             $this->readTime,
@@ -145,6 +152,7 @@ class Article
             $date,
             $this->category,
             $this->published,
+            $this->thumbnail,
             $this->articleId
         );
     }

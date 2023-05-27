@@ -173,7 +173,8 @@ include PROJECT_ROOT . '/header.html';
         articleId: <?= $article->articleId ?>,
         title: $('#title').val(),
         category: $('#category').val(),
-        content: quill.root.innerHTML
+        content: quill.root.innerHTML,
+        thumbnail: $('.ql-editor img').attr('src') || null
       })
         .done(() => {
           $('.toast-container').append(`

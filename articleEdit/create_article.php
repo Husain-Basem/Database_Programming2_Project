@@ -2,7 +2,7 @@
 
 include_once '../prelude.php';
 
-$article = new Article(null, 'Untitled Article', '', 0, $_SESSION['userId'], '', 'local', false);
+$article = new Article(null, 'Untitled Article', '', 0, $_SESSION['userId'], '', 'local', false, null);
 
 $articleId = $article->insert_article();
 

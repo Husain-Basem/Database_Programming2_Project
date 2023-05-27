@@ -39,12 +39,15 @@ The following users are added by default:
   - [ ] News list
 - [ ] Search page
 - [ ] Comments and rating
+  - [x] Comments
+  - [ ] Ratings
 - [ ] Author panel
-  - [ ] Add/Edit articles
-  - [ ] File upload
+  - [x] Add/Edit articles
+  - [x] Image upload
+  - [ ] Attachments
 - [ ] Admin panel
   - [ ] Manage users
   - [ ] Manage all news articles
   - [ ] Manage Comments
-- [ ] Display news article page
+- [x] Display news article page 
 - [ ] Admin report dashboard

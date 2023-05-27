@@ -17,7 +17,8 @@ CREATE TABLE `Articles` (
   `writtenBy` int(20) NOT NULL,
   `date` datetime NOT NULL,
   `category` varchar(50) NOT NULL,
-  `published` tinyint(1) NOT NULL
+  `published` tinyint(1) NOT NULL,
+  `thumbnail` varchar(1000) DEFAULT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `Comments`;
