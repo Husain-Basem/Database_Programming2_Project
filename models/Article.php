@@ -81,6 +81,56 @@ class Article
     /**
      * @return array<Article>
      */
+    public static function get_published_articles(): array
+    {
+        $db = Database::getInstance();
+        $articles = $db->query('select * from Articles where 
+                                   published = 1
+                                   order by date desc')->fetch_all(MYSQLI_ASSOC);
+        return array_map(function ($article) {
+            return new Article(
+                (int) $article['articleId'],
+                $article['title'],
+                $article['content'],
+                (int) $article['readTime'],
+                (int) $article['writtenBy'],
+                $article['date'],
+                $article['category'],
+                (bool) $article['published'],
+                $article['thumbnail']
+            );
+        }, $articles);
+    }
+
+    /**
+     * @return array<Article>
+     */
+    public static function search_articles(string $search): array
+    {
+        $db = Database::getInstance();
+        $articles = $db->query('select * from Articles where 
+                                   published = 1 and match (title,content) against (\'' . $db->escape($search) . '\')
+                                   order by date desc')->fetch_all(MYSQLI_ASSOC);
+        return array_map(function ($article) {
+            return new Article(
+                (int) $article['articleId'],
+                $article['title'],
+                $article['content'],
+                (int) $article['readTime'],
+                (int) $article['writtenBy'],
+                $article['date'],
+                $article['category'],
+                (bool) $article['published'],
+                $article['thumbnail']
+            );
+        }, $articles);
+    }
+
+
+
+    /**
+     * @return array<Article>
+     */
     public static function get_author_articles(int $authorId, bool $published = false): array
     {
         $db = Database::getInstance();
