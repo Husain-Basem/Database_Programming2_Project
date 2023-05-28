@@ -62,14 +62,14 @@ class Article
         if ($result != null) {
             $article = $result->fetch_assoc();
             return new Article(
-                (int)$article['articleId'],
+                (int) $article['articleId'],
                 $article['title'],
                 $article['content'],
-                (int)$article['readTime'],
-                (int)$article['writtenBy'],
+                (int) $article['readTime'],
+                (int) $article['writtenBy'],
                 $article['date'],
                 $article['category'],
-                (bool)$article['published'],
+                (bool) $article['published'],
                 $article['thumbnail']
             );
 
@@ -89,14 +89,14 @@ class Article
                                    order by date desc')->fetch_all(MYSQLI_ASSOC);
         return array_map(function ($article) {
             return new Article(
-                (int)$article['articleId'],
+                (int) $article['articleId'],
                 $article['title'],
                 $article['content'],
-                (int)$article['readTime'],
-                (int)$article['writtenBy'],
+                (int) $article['readTime'],
+                (int) $article['writtenBy'],
                 $article['date'],
                 $article['category'],
-                (bool)$article['published'],
+                (bool) $article['published'],
                 $article['thumbnail']
             );
         }, $articles);
@@ -119,7 +119,7 @@ class Article
                 $this->writtenBy,
                 $date,
                 $this->category,
-                $this->published,
+                (int) $this->published,
                 $this->thumbnail
             );
             $this->articleId = $id;

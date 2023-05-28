@@ -41,6 +41,25 @@ class File
         $this->userId = $userId;
     }
 
+    public static function from_fileId(int $fileId): ?File
+    {
+        $db = Database::getInstance();
+        $row = $db->query("select * from Files where fileId = $fileId")->fetch_assoc();
+        if ($row != null) {
+            return new File(
+                $row['fileId'],
+                $row['fileName'],
+                $row['fileType'],
+                $row['fileLocation'],
+                $row['fileSize'],
+                $row['downloadable'],
+                $row['articleId'],
+                $row['userId']
+            );
+        } else
+            return null;
+    }
+
     /// gets the absolute file path. e.g. /home/u202001264/public_html/DBProj/uploads/file1.txt
     public function get_absolute_fileLocation(): string
     {

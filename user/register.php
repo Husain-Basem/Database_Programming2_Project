@@ -51,6 +51,7 @@ if (isset($_POST['submitted'])) {
 
     if ($success && empty($errors)) {
         $_SESSION['username'] = $username;
+        $_SESSION['userId'] = User::from_username($username)->userId;
         $_SESSION['toasts'][] = array('type' => 'success', 'msg' => "Succesfully created user '$username'");
         session_write_close();
         header('Location: '.BASE_URL.'/index.php');
