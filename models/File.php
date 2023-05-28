@@ -12,6 +12,8 @@ class File
     public $fileType;
     /// @var string $fileLocation    absolute file path where the root is this project's root. e.g. /uploads/file1.txt
     public $fileLocation;
+    /// @var int
+    public $fileSize;
     /// @var bool
     public $downloadable;
     /// @var int
@@ -24,6 +26,7 @@ class File
         string $fileName,
         string $fileType,
         string $fileLocation,
+        int $fileSize,
         bool $downloadable,
         int $articleId,
         int $userId
@@ -32,6 +35,7 @@ class File
         $this->fileName = $fileName;
         $this->fileType = $fileType;
         $this->fileLocation = $fileLocation;
+        $this->fileSize = $fileSize;
         $this->downloadable = $downloadable;
         $this->articleId = $articleId;
         $this->userId = $userId;
@@ -51,16 +55,21 @@ class File
     /**
      * @return array<File>
      */
-    public static function get_files(int $articleId): array
+    public static function get_files(int $articleId, bool $downloadable = false): array
     {
         $db = Database::getInstance();
-        $files = $db->query("select * from Files where articleId = $articleId")->fetch_all(MYSQLI_ASSOC);
+        if ($downloadable)
+            $sql = "select * from Files where articleId = $articleId and downloadable = 1";
+        else
+            $sql = "select * from Files where articleId = $articleId";
+        $files = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
         $files = array_map(function ($file) {
             return new File(
                 $file['fileId'],
                 $file['fileName'],
                 $file['fileType'],
                 $file['fileLocation'],
+                $file['fileSize'],
                 $file['downloadable'],
                 $file['articleId'],
                 $file['userId']
@@ -87,11 +96,13 @@ class File
             if (move_uploaded_file($_FILES[$formname]['tmp_name'], $location)) {
                 $fileLocation = $location;
                 $fileType = $_FILES[$formname]['type'];
+                $fileSize = $_FILES[$formname]['size'];
                 $fileObj = new File(
                     null,
                     $fileName,
                     $fileType,
                     '/uploads/' . $fileName,
+                    $fileSize,
                     $attachment,
                     $articleId,
                     $userId
@@ -111,11 +122,12 @@ class File
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
             $id = $db->pquery_insert(
-                'insert into Files values (NULL,?,?,?,?,?,?)',
-                'sssiii',
+                'insert into Files values (NULL,?,?,?,?,?,?,?)',
+                'sssiiii',
                 $this->fileName,
                 $this->fileType,
                 $this->fileLocation,
+                $this->fileSize,
                 $this->downloadable,
                 $this->articleId,
                 $this->userId
@@ -125,10 +137,10 @@ class File
         }
     }
 
-    public function delete_file(): bool
+    public static function delete_file(int $fileId): bool
     {
         $db = Database::getInstance();
-        return $db->pquery('delete from Files where fileId = ?', 'i', $this->fileId);
+        return $db->pquery('delete from Files where fileId = ?', 'i', $fileId);
     }
 
     public function update_file(): bool
@@ -137,12 +149,13 @@ class File
         $db = Database::getInstance();
         return $db->pquery(
             'update Files set fileName = ?, fileType = ?,
-             fileLocation = ?, downloadable = ?, 
+             fileLocation = ?, fileSize = ?, downloadable = ?, 
               articleId = ?, userId = ? where fileId = ?',
-            'ssssiii',
+            'sssiiiii',
             $this->fileName,
             $this->fileType,
             $this->fileLocation,
+            $this->fileSize,
             $this->downloadable,
             $this->articleId,
             $this->userId,

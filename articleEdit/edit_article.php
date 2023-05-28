@@ -47,6 +47,47 @@ include PROJECT_ROOT . '/header.html';
     <pre id="template" class="visually-hidden"><?= $article->content ?></pre>
   </div>
 
+  <div class="d-flex flex-row my-4">
+    <h2 class="mb-0">Attachments</h2>
+    <label class="btn btn-primary ms-auto" id="uploadBtn" role="button">
+      Upload Attachment
+      <input type="file" name="attachment" id="attachment" class="visually-hidden">
+    </label>
+  </div>
+
+  <div id="attachments" class="list-group mb-5 col-12 col-md-6 mx-auto">
+    <?php
+    $attachments = File::get_files($article->articleId, true);
+    foreach ($attachments as $a) {
+      echo '
+    <div class="list-group-item d-flex align-items-center">
+      <p class="m-0">' . $a->fileName . '</p>
+      <small class="ms-3 text-muted">' . $a->fileSize . '</small>
+      <div class="ms-auto btn-group" role="group" aria-label="Attachment Actions">
+        <a class="upload-btn btn btn-outline-primary" href="' . $a->get_url() . '" downlod="' . $a->fileName . '">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+            viewBox="0 0 16 16">
+            <path
+              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+            <path
+              d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+          </svg>
+        </a>
+        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="' . $a->fileId . '">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+      ';
+    }
+    ?>
+  </div>
+
+
   <!-- Delete Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
     aria-hidden="true">
@@ -132,7 +173,7 @@ include PROJECT_ROOT . '/header.html';
     quill.root.innerHTML = $('#template').html();
     $('#template').remove();
 
-    function uploader(file) {
+    function uploader(file, action = '<?= BASE_URL ?>/articleEdit/upload_image.php', rel = '..') {
       return new Promise((resolve, reject) => {
         let formData = new FormData();
         formData.append('myFile', file);
@@ -140,13 +181,14 @@ include PROJECT_ROOT . '/header.html';
         formData.append('articleId', <?= $_GET['articleId'] ?>);
         $.ajax({
           type: 'POST',
-          url: '<?= BASE_URL ?>/articleEdit/upload_file.php',
+          url: action,
           data: formData,
           cache: false,
           contentType: false,
           processData: false,
+          dataType: 'text',
           statusCode: {
-            200: (filepath) => { resolve('..' + filepath); },
+            200: (result) => { resolve(rel + result); },
             201: (msg) => {
               reject();
               $('.toast-container').append(`
@@ -202,6 +244,62 @@ include PROJECT_ROOT . '/header.html';
     });
 
     $('#publishBtn').on('click', () => { $('#saveBtn').trigger('click') });
+
+    function formatSize(size) {
+      if (size < 1000) return size + ' Bytes';
+      else if (size < 1_000_000) return (size / 1000).toFixed(2) + ' kB';
+      else return (size / 1_000_000).toFixed(2) + ' MB';
+    }
+
+    $('#attachment').on('change', () => {
+      const file = $('#attachment')[0].files[0];
+      uploader(file, '<?= BASE_URL ?>/articleEdit/upload_attachment.php', '').then(uploadJSON => {
+        const upload = JSON.parse(uploadJSON);
+        let fileSizeString = formatSize(file.size);
+        $('#attachments').append(`
+    <div class="list-group-item d-flex align-items-center">
+      <p class="m-0">${upload.fileName}</p>
+      <small class="ms-3 text-muted">${fileSizeString}</small>
+      <div class="ms-auto btn-group" role="group" aria-label="Attachment Actions">
+        <a class="dload-btn btn btn-outline-primary" href="${upload.fileUrl}" download="${upload.fileName}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+            viewBox="0 0 16 16">
+            <path
+              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+            <path
+              d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+          </svg>
+        </a>
+        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="${upload.fileId}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+        `);
+
+      });
+    });
+
+    $.each($('#attachments small'), function () {
+      $(this).text(formatSize($(this).text()));
+    });
+
+    $.each($('.delete-btn'), function () {
+      const item = $(this).parents('.list-group-item');
+      $(this).on('click', function () {
+        $.post('<?= BASE_URL ?>/articleEdit/delete_attachment.php', { fileId: $(this).data('fileId') })
+          .done(() => {
+            console.log("deleted");
+            item.addClass('fade');
+            setTimeout(() => item.remove(), 150);
+          })
+          .fail(() => { console.log("didnt delete " + $(this).data('fileId')); })
+      });
+    });
 
   });
 </script>

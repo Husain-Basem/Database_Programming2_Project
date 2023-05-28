@@ -41,10 +41,10 @@ The following users are added by default:
 - [ ] Comments and rating
   - [x] Comments
   - [ ] Ratings
-- [ ] Author panel
+- [x] Author panel
   - [x] Add/Edit articles
   - [x] Image upload
-  - [ ] Attachments
+  - [x] Attachments
 - [ ] Admin panel
   - [ ] Manage users
   - [ ] Manage all news articles

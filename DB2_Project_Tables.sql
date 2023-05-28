@@ -37,6 +37,7 @@ CREATE TABLE `Files` (
   `fileName` varchar(250) NOT NULL,
   `fileType` varchar(250) NOT NULL,
   `fileLocation` varchar(250) NOT NULL,
+  `fileSize` int(20) NOT NULL,
   `downloadable` tinyint(1) NOT NULL,
   `articleId` int(20) DEFAULT NULL,
   `userId` int(20) DEFAULT NULL
