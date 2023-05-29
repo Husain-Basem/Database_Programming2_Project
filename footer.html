@@ -1,7 +1,10 @@
 <script>
-const toastElList = document.querySelectorAll('.toast');
-const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {delay: 3000}));
-for (toast of toastList) toast.show();
+    const toastElList = document.querySelectorAll('.toast');
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, { delay: 3000 }));
+    for (toast of toastList) {
+        $(toast._element).on('hidden.bs.toast', function () { $(this).remove() });
+        toast.show();
+    }
 </script>
 </body>
 
