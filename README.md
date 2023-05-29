@@ -45,9 +45,17 @@ The following users are added by default:
   - [x] Add/Edit articles
   - [x] Image upload
   - [x] Attachments
-- [ ] Admin panel
+- [x] Admin panel
   - [ ] Manage users
+    - [ ] Edit/Delete users
+    - [x] Register authors
   - [ ] Manage all news articles
-  - [ ] Manage Comments
+    - [ ] Edit/delete articles
+    - [ ] delete Comments
+  - [x] Manage own articles
+  - [ ] Admin report dashboard
 - [x] Display news article page 
-- [ ] Admin report dashboard
+  - [x] Display article
+  - [x] Comments
+  - [ ] Ratings
+  - [ ] Attachments

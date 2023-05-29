@@ -5,6 +5,7 @@ include_once '../prelude.php';
 if (isset($_GET['articleId'])) {
   $article = Article::from_articleId((int) $_GET['articleId']);
 }
+// TODO: authorize user
 
 $pageTitle = 'Article Edit';
 $headerIncludes = '
