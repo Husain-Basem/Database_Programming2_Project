@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?= $pageTitle?></title>
-    <link rel="stylesheet" href="<?= BASE_URL . '/css/bootstrap.min.css'?>" />
-    <script src="<?= BASE_URL . '/js/jquery-3.7.0.min.js'?>"></script>
-    <script src="<?= BASE_URL . '/js/bootstrap.bundle.min.js'?>"></script>
-    <?= $headerIncludes ?>
-    <link rel="stylesheet" href="<?= BASE_URL . '/css/site.css'?>" />
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <?= $pageTitle?>
+  </title>
+  <link rel="stylesheet" href="<?= BASE_URL . '/css/bootstrap.min.css'?>" />
+  <script src="<?= BASE_URL . '/js/jquery-3.7.0.min.js'?>"></script>
+  <script src="<?= BASE_URL . '/js/bootstrap.bundle.min.js'?>"></script>
+  <?= $headerIncludes ?>
+  <link rel="stylesheet" href="<?= BASE_URL . '/css/site.css'?>" />
+</head>
 
-<nav class="navbar navbar-expand-lg mb-3" style="background-color: #e3f3fd">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="<?=BASE_URL?>">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+<body>
+  <nav class="navbar navbar-expand-lg mb-3" style="background-color: #e3f3fd">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="<?=BASE_URL?>">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
             <a class="nav-link" href="<?= BASE_URL . '/index.php'?>">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/local/index.php'?>">Local News</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/international/index.php'?>">
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/displayNews/categorized_articles.php?c=local'?>">Local News</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/displayNews/categorized_articles.php?c=international'?>">
               International News
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/economy/index.php'?>">Economy</a>
-        </li>
-        <li class="nav-item">
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/displayNews/categorized_articles.php?c=economy'?>">Economy</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="<?= BASE_URL . '/weather/index.php'?>">Weather Forecast</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/tourism/index.php'?>">Tourism</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/displayNews/article.php?id=1'?>">Articles</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav">
-       <?php include_once PROJECT_ROOT . '/user/navbar.php'?>
-      </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<?= BASE_URL . '/displayNews/categorized_articles.php?c=tourism'?>">Tourism</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <?php include_once PROJECT_ROOT . '/user/navbar.php'?>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div aria-live="polite" aria-atomic="true" class="position-relative">
-  <!-- Position it: -->
-  <!-- - `.toast-container` for spacing between toasts -->
-  <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
-  <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
-  <div class="toast-container top-0 end-0 p-3">
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Position it: -->
+    <!-- - `.toast-container` for spacing between toasts -->
+    <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
+    <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+    <div class="toast-container top-0 end-0 p-3">
 
-    <!-- Then put toasts within -->
+      <!-- Then put toasts within -->
       <?php
       foreach ($_SESSION['toasts'] as $toast) {
           echo '
@@ -75,5 +75,5 @@
       unset($_SESSION['toasts']);
     ?>
 
+    </div>
   </div>
-</div>

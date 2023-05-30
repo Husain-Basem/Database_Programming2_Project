@@ -10,6 +10,8 @@ if (isset($_POST['title']))
     $article->title = $_POST['title'];
 if (isset($_POST['category']))
     $article->category = $_POST['category'];
+if (isset($_POST['readTime']))
+    $article->readTime = (int) $_POST['readTime'];
 if (isset($_POST['thumbnail']) && !empty($_POST['thumbnail']))
     $article->thumbnail = $_POST['thumbnail'];
 else 

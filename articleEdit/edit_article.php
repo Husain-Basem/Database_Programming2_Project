@@ -217,6 +217,7 @@ include PROJECT_ROOT . '/header.html';
         title: $('#title').val(),
         category: $('#category').val(),
         content: quill.root.innerHTML,
+        readTime: quill.root.innerText.trim().split(' ').length,
         thumbnail: $('.ql-editor img').attr('src') || null
       })
         .done(() => {

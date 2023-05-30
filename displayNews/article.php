@@ -51,6 +51,7 @@ include PROJECT_ROOT . '/header.html';
 
 <div class="container">
     <h1><?php echo $article['title']; ?></h1>
+    <div>readtime: <?= $article['readTime'] ?> min</div>
     <div class="ql-container">
     <div class="ql-snow clearfix">
         <div class="ql-editor">
@@ -58,21 +59,6 @@ include PROJECT_ROOT . '/header.html';
         </div>
     </div>
     </div>
-    <?php if ($article['image']) { ?>
-        <img src="<?php echo $article['image']; ?>" alt="<?php echo $article['title']; ?>">
-    <?php } ?>
-    <?php if ($article['audio']) { ?>
-        <audio controls>
-            <source src="<?php echo $article['audio']; ?>" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    <?php } ?>
-    <?php if ($article['video']) { ?>
-        <video controls>
-            <source src="<?php echo $article['video']; ?>" type="video/mp4">
-            Your browser does not support the video element.
-        </video>
-    <?php } ?>
 
     <hr>
 

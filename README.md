@@ -48,9 +48,11 @@ The following users are added by default:
 - [x] Admin panel
   - [x] Manage users
     - [x] Delete users
+    - [ ] Edit users
     - [x] Register authors
   - [ ] Manage all news articles
-    - [ ] Edit/delete articles
+    - [ ] Approve articles
+    - [ ] Edit/remove articles
     - [ ] delete Comments
   - [x] Manage own articles
   - [ ] Admin report dashboard

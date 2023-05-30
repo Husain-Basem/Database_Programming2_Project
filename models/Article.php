@@ -148,7 +148,7 @@ class Article
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
             $id = $db->pquery_insert(
-                'insert into Articles values (NULL,?,?,?,?,?,?,?,?)',
+                'insert into Articles values (NULL,?,?,?,?,?,?,?,?,?,?)',
                 'ssiissiiis',
                 $this->title,
                 $this->content,
