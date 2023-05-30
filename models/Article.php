@@ -21,9 +21,35 @@ class Article
     public $category;
     /// @var bool
     public $published;
+    /// @var bool
+    public $approved;
+    /// @var bool
+    public $removed;
     /// @var string
     public $thumbnail;
+    /// @var string|null $author Author name
+    private $author;
 
+    private static function __set_state(array $state): Article
+    {
+        $article = new Article(
+            (int) $state['articleId'],
+            $state['title'],
+            $state['content'],
+            (int) $state['readTime'],
+            (int) $state['writtenBy'],
+            $state['date'],
+            $state['category'],
+            (bool) $state['published'],
+            (bool) $state['approved'],
+            (bool) $state['removed'],
+            $state['thumbnail']
+        );
+        if (isset($state['author']))
+            $article->author = $state['author'];
+        return $article;
+
+    }
     public function __construct(
         ?int $articleId,
         string $title,
@@ -33,6 +59,8 @@ class Article
         string $date,
         string $category,
         bool $published,
+        bool $approved,
+        bool $removed,
         ?string $thumbnail
     ) {
         $this->articleId = $articleId;
@@ -43,6 +71,8 @@ class Article
         $this->date = $date;
         $this->category = $category;
         $this->published = $published;
+        $this->approved = $approved;
+        $this->removed = $removed;
         $this->thumbnail = $thumbnail;
     }
 
@@ -60,19 +90,8 @@ class Article
         $db = Database::getInstance();
         $result = $db->query("select * from Articles where articleId = $articleId");
         if ($result != null) {
-            $article = $result->fetch_assoc();
-            return new Article(
-                (int) $article['articleId'],
-                $article['title'],
-                $article['content'],
-                (int) $article['readTime'],
-                (int) $article['writtenBy'],
-                $article['date'],
-                $article['category'],
-                (bool) $article['published'],
-                $article['thumbnail']
-            );
-
+            $row = $result->fetch_assoc();
+            return Article::__set_state($row);
         } else
             return null;
 
@@ -87,18 +106,8 @@ class Article
         $articles = $db->query('select * from Articles where 
                                    published = 1
                                    order by date desc')->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($article) {
-            return new Article(
-                (int) $article['articleId'],
-                $article['title'],
-                $article['content'],
-                (int) $article['readTime'],
-                (int) $article['writtenBy'],
-                $article['date'],
-                $article['category'],
-                (bool) $article['published'],
-                $article['thumbnail']
-            );
+        return array_map(function ($row) {
+            return Article::__set_state($row);
         }, $articles);
     }
 
@@ -108,21 +117,9 @@ class Article
     public static function search_articles(string $search): array
     {
         $db = Database::getInstance();
-        $articles = $db->query('select * from Articles where 
-                                   published = 1 and match (title,content) against (\'' . $db->escape($search) . '\')
-                                   order by date desc')->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($article) {
-            return new Article(
-                (int) $article['articleId'],
-                $article['title'],
-                $article['content'],
-                (int) $article['readTime'],
-                (int) $article['writtenBy'],
-                $article['date'],
-                $article['category'],
-                (bool) $article['published'],
-                $article['thumbnail']
-            );
+        $articles = $db->query('call `SearchArticles`(\'' . $db->escape($search) . '\');')->fetch_all(MYSQLI_ASSOC);
+        return array_map(function ($row) {
+            return Article::__set_state($row);
         }, $articles);
     }
 
@@ -137,18 +134,8 @@ class Article
         $articles = $db->query('select * from Articles where writtenBy = ' . $authorId . ' 
                                    and published = ' . (int) $published . '
                                    order by date desc')->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($article) {
-            return new Article(
-                (int) $article['articleId'],
-                $article['title'],
-                $article['content'],
-                (int) $article['readTime'],
-                (int) $article['writtenBy'],
-                $article['date'],
-                $article['category'],
-                (bool) $article['published'],
-                $article['thumbnail']
-            );
+        return array_map(function ($row) {
+            return Article::__set_state($row);
         }, $articles);
     }
 
@@ -162,7 +149,7 @@ class Article
             $db = Database::getInstance();
             $id = $db->pquery_insert(
                 'insert into Articles values (NULL,?,?,?,?,?,?,?,?)',
-                'ssiissis',
+                'ssiissiiis',
                 $this->title,
                 $this->content,
                 $this->readTime,
@@ -170,6 +157,8 @@ class Article
                 $date,
                 $this->category,
                 (int) $this->published,
+                (int) $this->approved,
+                (int) $this->removed,
                 $this->thumbnail
             );
             $this->articleId = $id;
@@ -192,9 +181,10 @@ class Article
             'update Articles 
           set title = ?, content = ?, readTime = ?,
               writtenBy = ?, date = ?, category = ?,
-              published = ?, thumbnail = ?
+              published = ?, approved = ?,
+              removed = ?, thumbnail = ?
           where articleId = ?',
-            'ssiissisi',
+            'ssiissiiisi',
             $this->title,
             $this->content,
             $this->readTime,
@@ -202,6 +192,8 @@ class Article
             $date,
             $this->category,
             $this->published,
+            $this->approved,
+            $this->removed,
             $this->thumbnail,
             $this->articleId
         );
@@ -224,6 +216,11 @@ class Article
                 return '';
         }
 
+    }
+
+    public function get_author_name(): ?string
+    {
+        return $this->author;
     }
 
 }

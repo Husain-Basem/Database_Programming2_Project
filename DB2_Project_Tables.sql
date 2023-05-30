@@ -17,7 +17,9 @@ CREATE TABLE `Articles` (
   `writtenBy` int(20) NOT NULL,
   `date` datetime NOT NULL,
   `category` varchar(50) NOT NULL,
-  `published` tinyint(1) NOT NULL,
+  `published` tinyint(1) DEFAULT 0 NOT NULL,
+  `approved` tinyint(1) DEFAULT 0 NOT NULL,
+  `removed` tinyint(1) DEFAULT 0 NOT NULL,
   `thumbnail` varchar(1000) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -101,6 +103,14 @@ FROM Articles JOIN Users on (Users.userId = Articles.writtenBy)
 ORDER BY date DESC$$
 DELIMITER ;
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE `SearchArticles`(IN `search` VARCHAR(255) CHARSET utf8mb4)
+select Articles.*, CONCAT(Users.firstName, ' ', Users.lastName) as author
+from Articles
+JOIN Users on (Articles.writtenBy = Users.userId)
+where match (title, content) against (search)
+ORDER BY date DESC$$
+DELIMITER ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
