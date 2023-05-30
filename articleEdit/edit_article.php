@@ -35,6 +35,7 @@ include PROJECT_ROOT . '/header.html';
     </div>
     <div class="col hstack gap-3">
       <button id="saveBtn" class="btn btn-primary">Save</button>
+      <button id="previewBtn" class="btn btn-outline-primary">Preview</button>
       <button id="deleteBtn" class="btn btn-danger ms-auto" data-bs-toggle="modal"
         data-bs-target="#deleteModal">Delete</button>
       <button id="publishBtn" class="btn btn-primary" data-bs-toggle="modal"
@@ -211,7 +212,7 @@ include PROJECT_ROOT . '/header.html';
 
 
     // save article using AJAX with JQuery
-    $('#saveBtn').on('click', function () {
+    $('#saveBtn').on('click', function (_event, extraCallback = null) {
       $.post('<?= BASE_URL . '/articleEdit/save_article.php' ?>', {
         articleId: <?= $article->articleId ?>,
         title: $('#title').val(),
@@ -229,6 +230,7 @@ include PROJECT_ROOT . '/header.html';
                 </div>
               </div>
             `);
+          if (extraCallback != null) extraCallback();
         }).fail(() => {
           $('.toast-container').append(`
               <div id="saveToast" class="toast text-bg-danger" role="alert" aria-live="polite" aria-atomic="true">
@@ -246,6 +248,11 @@ include PROJECT_ROOT . '/header.html';
     });
 
     $('#publishBtn').on('click', () => { $('#saveBtn').trigger('click') });
+    $('#previewBtn').on('click', () => {
+      $('#saveBtn').trigger('click', [() => {
+        location.href = '<?= BASE_URL ?>/articleEdit/preview.php?articleId=<?= $article->articleId ?>'
+      }])
+    });
 
     function formatSize(size) {
       if (size < 1000) return size + ' Bytes';
