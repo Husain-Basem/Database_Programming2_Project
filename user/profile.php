@@ -42,7 +42,7 @@ include PROJECT_ROOT . '/header.html';
           <dt>Last Name</dt>
           <dd><?= $user->lastName ?></dd>
           <dt>Username</dt>
-          <dd><?= $user->username ?></dd>
+          <dd><?= $user->userName ?></dd>
           <dt>Email</dt>
           <dd><?= $user->email ?></dd>
           <dt>Country</dt>

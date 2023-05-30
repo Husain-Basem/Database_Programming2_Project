@@ -2,6 +2,7 @@
 
 include_once '../prelude.php';
 
+settype($fragment, 'string');
 $pageTitle = 'Admin Panel';
 include PROJECT_ROOT . '/header.html';
 
@@ -18,7 +19,7 @@ include PROJECT_ROOT . '/header.html';
                 <li class="nav-item" role="presentation">
                     <a id="manage-users-tab" data-bs-target="#manage-users-pane" aria-controls="manage-users-pane"
                         data-bs-toggle="tab" role="tab" href="#" class="w-100 nav-link active" aria-current="page">
-                        Edit or Delete Users
+                        Delete Users
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -63,7 +64,7 @@ include PROJECT_ROOT . '/header.html';
         <div class="col-sm-12 col-md-9 col-lg-10 tab-content border-start" id="myTabContent">
             <div id="manage-users-pane" class="tab-pane fade show active" role="tabpanel"
                 aria-labelleddy="manage-users-tab" tabindex="0">
-                <h2>Manage Users</h2>
+                <h2>Delete Users</h2>
                 <?php require_once PROJECT_ROOT . '/admin/manage_users.php'; ?>
             </div>
             <div id="register-author-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="register-author-tab"

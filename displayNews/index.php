@@ -18,9 +18,8 @@ var_dump(Database::getInstance()->mysqli->get_server_info()) ?>
         <br>
         <?php echo "BASE_URL: " . BASE_URL ?>
         <br>
-        <?php User::register_user('bob', 'bobson', 'bob', '123', 'bob@bob.com', 'VIEWER', null, 'Bahrain') ?>
         <?php echo "Bob: ";
-var_dump(User::from_username('bob')) ?>
+var_dump(User::from_userId(1)) ?>
         <br>
         <?php 
         $articles = Article::search_articles('shop');

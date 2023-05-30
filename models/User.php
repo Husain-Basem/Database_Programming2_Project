@@ -11,7 +11,7 @@ class User
     /// @var string
     public $lastName;
     /// @var string
-    public $username;
+    public $userName;
     /// @var string password Hashed password
     private $password;
     /// @var string
@@ -25,11 +25,27 @@ class User
     /// @var string
     public $country;
 
+    private static function __set_state(array $state): User
+    {
+        return new User(
+            $state['userId'],
+            $state['firstName'],
+            $state['lastName'],
+            $state['userName'],
+            $state['password'],
+            $state['email'],
+            $state['type'],
+            $state['description'],
+            $state['date'],
+            $state['country']
+        );
+    }
+
     private function __construct(
-        int    $userId,
+        int $userId,
         string $firstName,
         string $lastName,
-        string $username,
+        string $userName,
         string $password,
         string $email,
         string $type,
@@ -37,16 +53,16 @@ class User
         string $date,
         string $country
     ) {
-        $this->userId=$userId;
-        $this->firstName=$firstName;
-        $this->lastName=$lastName;
-        $this->username=$username;
-        $this->password=$password;
-        $this->email=$email;
-        $this->type=$type;
-        $this->description=$description;
-        $this->date=$date;
-        $this->country=$country;
+        $this->userId = $userId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->userName = $userName;
+        $this->password = $password;
+        $this->email = $email;
+        $this->type = $type;
+        $this->description = $description;
+        $this->date = $date;
+        $this->country = $country;
     }
 
     public static function register_user(
@@ -66,7 +82,7 @@ class User
             $date = date('Y-m-d\TH:i:s');
 
             return Database::getInstance()->pquery(
-                'insert into Users (userId, firstName, lastName, username, password, email, type, 
+                'insert into Users (userId, firstName, lastName, userName, password, email, type, 
                                 description, date, country)
              values (?,?,?,?,?,?,?,?,?,?);',
                 'isssssssss',
@@ -88,8 +104,8 @@ class User
     {
         $db = Database::getInstance();
         return !empty($db
-          ->query("select username from Users where username = '" . $db->mysqli->real_escape_string($username) . "'")
-          ->fetch_row());
+            ->query("select username from Users where username = '" . $db->mysqli->real_escape_string($username) . "'")
+            ->fetch_row());
     }
 
     public static function from_username(string $username): ?User
@@ -97,28 +113,38 @@ class User
         $db = Database::getInstance();
 
         $result = $db
-            ->query('select userId,firstName,lastName,username,password,
-                            email,type,description,date,country 
-                     from `Users` where username = \'' . $db->mysqli->real_escape_string($username) . '\'');
+            ->query('select * from `Users` where username = \'' . $db->escape($username) . '\'');
 
         $row = $result->fetch_assoc();
         if ($row != null) {
-            return new User(
-                $row['userId'],
-                $row['firstName'],
-                $row['lastName'],
-                $row['username'],
-                $row['password'],
-                $row['email'],
-                $row['type'],
-                $row['description'],
-                $row['date'],
-                $row['country']
-            );
+            return User::__set_state($row);
         } else {
             return null;
         }
+    }
 
+    public static function from_userId(int $userId): ?User
+    {
+        $db = Database::getInstance();
+        $result = $db->query('select * from `Users` where userId = ' . $userId);
+        $row = $result->fetch_assoc();
+        if ($row != null) {
+            return User::__set_state($row);
+        } else {
+            return null;
+        }
+    }
+
+    public static function from_email(string $email): ?User
+    {
+        $db = Database::getInstance();
+        $result = $db->query('select * from `Users` where email = \'' . $db->escape($email) . '\'');
+        $row = $result->fetch_assoc();
+        if ($row != null) {
+            return User::__set_state($row);
+        } else {
+            return null;
+        }
     }
 
     public function is_viewer(): bool
