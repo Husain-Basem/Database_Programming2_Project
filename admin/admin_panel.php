@@ -81,8 +81,8 @@ include PROJECT_ROOT . '/header.html';
             </div>
             <div id="pending-articles-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="pending-articles-tab"
                 tabindex="0">
-                <h2>Pending Articles</h2>
-                <?php require_once PROJECT_ROOT . '/admin/manage_articles.php'; ?>
+                <!-- <h2>Pending Articles</h2> -->
+                <?php require_once PROJECT_ROOT . '/admin/pending_articles.php'; ?>
             </div>
             <div id="manage-articles-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="manage-articles-tab"
                 tabindex="0">
@@ -110,7 +110,7 @@ include PROJECT_ROOT . '/header.html';
 <script>
     // auto select tab from url fragment
     $(() => {
-        <?= isset($fragment) ? "location.hash = '$fragment';" : '' ?>
+        <?= !empty($fragment) ? "location.hash = '$fragment';" : '' ?>
         $(location.hash).tab('show');
     });
 </script>

@@ -104,7 +104,7 @@ class Article
     {
         $db = Database::getInstance();
         $articles = $db->query('select * from Articles where 
-                                   published = 1
+                                   published = 1 and approved = 1
                                    order by date desc')->fetch_all(MYSQLI_ASSOC);
         return array_map(function ($row) {
             return Article::__set_state($row);
@@ -122,6 +122,47 @@ class Article
             return Article::__set_state($row);
         }, $articles);
     }
+
+    /**
+     * @return array<Article>
+     */
+    public static function search_articles_exact(string $search, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): array
+    {
+        $db = Database::getInstance();
+        $sql = 'select Articles.*, concat(Users.firstName, \' \', Users.lastName) as author
+                from Articles join Users on (Articles.writtenBy = Users.userId)
+                where title like \'%' . $db->escape($search) . '%\'';
+        if (isset($published))
+            $sql .= ' and published = ' . (int) $published;
+        if (isset($approved))
+            $sql .= ' and approved = ' . (int) $approved;
+        if (isset($removed))
+            $sql .= ' and removed = ' . (int) $removed;
+        $sql .= ' limit 5;';
+
+        $articles = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return array_map(function ($row) {
+            return Article::__set_state($row);
+        }, $articles);
+    }
+
+    public static function count_articles(?string $search = null, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): int
+    {
+        $db = Database::getInstance();
+        $sql = 'select count(*) as count
+                from Articles join Users on (Articles.writtenBy = Users.userId) where 1 = 1';
+        if (isset($search))
+            $sql .= ' and title like \'%' . $db->escape($search) . '%\'';
+        if (isset($published))
+            $sql .= ' and published = ' . (int) $published;
+        if (isset($approved))
+            $sql .= ' and approved = ' . (int) $approved;
+        if (isset($removed))
+            $sql .= ' and removed = ' . (int) $removed;
+        $row = $db->query($sql)->fetch_assoc();
+        return (int) $row['count'];
+    }
+
 
 
 

@@ -58,7 +58,7 @@ include_once '../prelude.php';
             $(this).prepend(`
              <span class="spinner-border spinner-border-sm" role="status"></span>
             `);
-            $.post('<?= BASE_URL ?>/admin/get_user.php', {
+            $.post('<?= BASE_URL ?>/admin/ajax_get_user.php', {
                 userSearch: $('#userSearch').val(),
                 userSearchBy: $('#userSearchBy').val()
             }).done(userJson => {
@@ -91,7 +91,7 @@ include_once '../prelude.php';
         new bootstrap.Modal('#deleteUserModal');
 
         $('#deleteUserConfirmBtn').on('click', function () {
-            $.post('<?= BASE_URL ?>/admin/delete_user.php', { userId: $(this).data('userId') })
+            $.post('<?= BASE_URL ?>/admin/ajax_delete_user.php', { userId: $(this).data('userId') })
                 .done(() => {
                     $('.toast-container').append(`
                        <div id="userDeleteToast" class="toast text-bg-success" role="alert" aria-live="polite" aria-atomic="true">

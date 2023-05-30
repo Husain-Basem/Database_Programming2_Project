@@ -6,6 +6,7 @@ if (isset($_GET['articleId'])) {
   $article = Article::from_articleId((int) $_GET['articleId']);
 }
 // TODO: authorize user
+$user = User::from_userId($_SESSION['userId']);
 
 $pageTitle = 'Article Edit';
 $headerIncludes = '
@@ -35,7 +36,7 @@ include PROJECT_ROOT . '/header.html';
     </div>
     <div class="col hstack gap-3">
       <button id="saveBtn" class="btn btn-primary">Save</button>
-      <button id="previewBtn" class="btn btn-outline-primary">Preview</button>
+      <button id="previewBtn" class="btn btn-outline-primary"><?= $user->is_admin() ? 'Review' : 'Preview' ?></button>
       <button id="deleteBtn" class="btn btn-danger ms-auto" data-bs-toggle="modal"
         data-bs-target="#deleteModal">Delete</button>
       <button id="publishBtn" class="btn btn-primary" data-bs-toggle="modal"
