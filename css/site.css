@@ -15,3 +15,10 @@
 .ql-editor p {
     margin-bottom: 0;
 }
+
+.card-img {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 50%;
+    --bs-aspect-ratio: calc(3 / 4  * 100%);
+}

@@ -31,10 +31,17 @@ include PROJECT_ROOT . '/header.html';
                     <a class="nav-link disabled pb-1 mt-2">Article Management</a>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <a id="pending-articles-tab" aria-controls="pending-articles-pane"
+                        data-bs-target="#pending-articles-pane" data-bs-toggle="tab" class="w-100 nav-link" type="button"
+                        role="tab">
+                        Pending Articles
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
                     <a id="manage-articles-tab" aria-controls="manage-articles-pane"
                         data-bs-target="#manage-articles-pane" data-bs-toggle="tab" class="w-100 nav-link" type="button"
                         role="tab">
-                        Manage All Articles
+                        Edit/Remove Articles
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -72,9 +79,14 @@ include PROJECT_ROOT . '/header.html';
                 <h2>Register Author</h2>
                 <?php require_once PROJECT_ROOT . '/admin/register_author.php'; ?>
             </div>
+            <div id="pending-articles-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="pending-articles-tab"
+                tabindex="0">
+                <h2>Pending Articles</h2>
+                <?php require_once PROJECT_ROOT . '/admin/manage_articles.php'; ?>
+            </div>
             <div id="manage-articles-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="manage-articles-tab"
                 tabindex="0">
-                <h2>Manage Articles</h2>
+                <h2>Edit or Delete Articles</h2>
                 <?php require_once PROJECT_ROOT . '/admin/manage_articles.php'; ?>
             </div>
             <div id="manage-comments-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="manage-comments-tab"
