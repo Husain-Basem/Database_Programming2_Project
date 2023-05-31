@@ -36,7 +36,9 @@ include PROJECT_ROOT . '/header.html';
     </div>
     <div class="col hstack gap-3">
       <button id="saveBtn" class="btn btn-primary">Save</button>
-      <button id="previewBtn" class="btn btn-outline-primary"><?= $user->is_admin() ? 'Review' : 'Preview' ?></button>
+      <button id="previewBtn" class="btn btn-outline-primary">
+        <?= $user->is_admin() ? 'Review' : 'Preview' ?>
+      </button>
       <button id="deleteBtn" class="btn btn-danger ms-auto" data-bs-toggle="modal"
         data-bs-target="#deleteModal">Delete</button>
       <button id="publishBtn" class="btn btn-primary" data-bs-toggle="modal"
@@ -142,6 +144,9 @@ include PROJECT_ROOT . '/header.html';
 </div>
 
 <script>
+  const WORDS_PER_MIN = 250;
+  const IMAGE_READ_TIME = 12;
+
   $(() => {
     Quill.register('modules/imageUploader', ImageUploader);
     Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
@@ -219,7 +224,7 @@ include PROJECT_ROOT . '/header.html';
         title: $('#title').val(),
         category: $('#category').val(),
         content: quill.root.innerHTML,
-        readTime: quill.root.innerText.trim().split(' ').length,
+        readTime: calculateReadTime(),
         thumbnail: $('.ql-editor img').attr('src') || null
       })
         .done(() => {
@@ -310,6 +315,16 @@ include PROJECT_ROOT . '/header.html';
           .fail(() => { console.log("didnt delete " + $(this).data('fileId')); })
       });
     });
+
+    function calculateReadTime() {
+      const words = quill.root.innerText.trim().split(/\s+/).length;
+      const images = $('.ql-editor img').length;
+      const imageReadTimeSecs =
+        images > 10
+          ? 10 * (IMAGE_READ_TIME + 3) / 2 + 3 * (images - 10)
+          : images * (2 * IMAGE_READ_TIME + 1 - images) / 2;
+      return Math.round(words / WORDS_PER_MIN + imageReadTimeSecs / 60)
+    }
 
   });
 </script>
