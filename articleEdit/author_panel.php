@@ -5,6 +5,18 @@ include_once '../prelude.php';
 $pageTitle = 'Author Panel';
 include PROJECT_ROOT . '/header.html';
 
+if(empty($_SESSION['username'])){
+    header('Location: index.php');
+    session_destroy();
+}
+
+$user = User::from_username($_SESSION['username']);
+
+if (!$user->is_author() && !$user->is_admin()){
+    header('Location: index.php');
+    session_destroy();
+}
+
 ?>
 
 <div class="container">
