@@ -8,6 +8,13 @@ if (isset($_GET['articleId'])) {
 // TODO: authorize user
 $user = User::from_userId($_SESSION['userId']);
 
+if (isset($_GET['returnUrl'])) {
+  $returnUrl = $_GET['returnUrl'];
+  $returnName = $_GET['returnName'];
+} else {
+  $returnUrl = 'author_panel.php';
+  $returnName = 'Author Panel';
+}
 $pageTitle = 'Article Edit';
 $headerIncludes = '
     <link rel="stylesheet" href="' . BASE_URL . '/css/quill.snow.css" />
@@ -22,8 +29,26 @@ include PROJECT_ROOT . '/header.html';
 
 
 <div class="container">
+  <?php
+  if ($article->removed)
+    echo '
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>This article was removed by an administrator.</strong><span class="ms-2">It will be hidden from viewers</span>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+  ';
+  ?>
+
   <div class="row align-items-center mb-3">
     <div class="col-6 hstack gap-2">
+      <button id="returnBtn" class="btn btn-link p-0" href="<?= $returnUrl ?>" aria-label="Back to <?= $returnName ?>"
+        title="Back to <?= $returnName ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+        </svg>
+      </button>
       <input type="text" name="title" id="title" class="form-control" required value="<?= $article->title ?>">
       <label for="category" class="form-label">Category:</label>
       <select class="form-select w-50" name="category" id="category">
@@ -257,6 +282,11 @@ include PROJECT_ROOT . '/header.html';
     $('#previewBtn').on('click', () => {
       $('#saveBtn').trigger('click', [() => {
         location.href = '<?= BASE_URL ?>/articleEdit/preview.php?articleId=<?= $article->articleId ?>'
+      }])
+    });
+    $('#returnBtn').on('click', () => {
+      $('#saveBtn').trigger('click', [() => {
+        location.href = $('#returnBtn').attr('href');
       }])
     });
 

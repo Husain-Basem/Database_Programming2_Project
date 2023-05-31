@@ -47,6 +47,7 @@ $count = $pagination->get_total_entries();
                         for (const article of articles) {
                             $('#pendingArticlesList').append(`
                                <li class="list-group-item d-flex align-items-baseline" title="'${article.title}' by ${article.author}">
+                                   ${article.removed ? '<span class="badge rounded-pill me-2 text-bg-danger">Was Removed</span>' : ''}
                                    <span class="text-truncate">${article.title}</span>
                                    <small class="ms-2 text-muted text-truncate">By ${article.author}</small>
                                    <a class="btn btn-outline-primary ms-auto" href="<?= BASE_URL ?>/articleEdit/preview.php?articleId=${article.articleId}"

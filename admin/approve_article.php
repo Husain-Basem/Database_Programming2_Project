@@ -6,6 +6,7 @@ include_once '../prelude.php';
 $article = Article::from_articleId($_GET['articleId']);
 $article->published = true;
 $article->approved = true;
+$article->removed = false;
 $success = $article->update_article();
 
 if ($success) {
