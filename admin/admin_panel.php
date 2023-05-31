@@ -6,16 +6,6 @@ settype($fragment, 'string');
 $pageTitle = 'Admin Panel';
 include PROJECT_ROOT . '/header.html';
 
-if(empty($_SESSION['username'])){
-    header('Location: index.php');
-    session_destroy();
-}
-
-$user = User::from_username($_SESSION['username']);
-if (!$user->is_admin()){
-    header('Location: index.php');
-    session_destroy();
-}
 ?>
 
 <div class="container">
