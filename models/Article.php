@@ -30,7 +30,7 @@ class Article
     /// @var string|null $author Author name
     private $author;
 
-    private static function __set_state(array $state): Article
+    public static function __set_state(array $state): Article
     {
         $article = new Article(
             (int) $state['articleId'],
@@ -126,24 +126,22 @@ class Article
     /**
      * @return array<Article>
      */
-    public static function search_articles_exact(string $search, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): array
+    public static function search_articles_exact(?string $search = null, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): Pagination
     {
         $db = Database::getInstance();
         $sql = 'select Articles.*, concat(Users.firstName, \' \', Users.lastName) as author
                 from Articles join Users on (Articles.writtenBy = Users.userId)
-                where title like \'%' . $db->escape($search) . '%\'';
+                where 1=1';
+        if (isset($search))
+            $sql .= ' and title like \'%' . $db->escape($search) . '%\'';
         if (isset($published))
             $sql .= ' and published = ' . (int) $published;
         if (isset($approved))
             $sql .= ' and approved = ' . (int) $approved;
         if (isset($removed))
             $sql .= ' and removed = ' . (int) $removed;
-        $sql .= ' limit 5;';
-
-        $articles = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($row) {
-            return Article::__set_state($row);
-        }, $articles);
+        $pagination = new Pagination(5, $sql);
+        return $pagination;
     }
 
     public static function count_articles(?string $search = null, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): int
