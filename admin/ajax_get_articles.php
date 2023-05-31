@@ -28,7 +28,9 @@ if (!empty($articles)) {
                     'thumbnail' => $article->thumbnail,
                     'readTime' => $article->readTime,
                     'author' => $article->get_author_name(),
-                    'debug' => var_export($_POST, true)
+                    'published' => $article->published,
+                    'approved' => $article->approved,
+                    'removed' => $article->removed,
                 );
             }, $articles)
         )

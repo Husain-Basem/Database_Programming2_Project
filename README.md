@@ -51,8 +51,8 @@ The following users are added by default:
     - [ ] Edit users
     - [x] Register authors
   - [ ] Manage all news articles
-    - [ ] Approve articles
-    - [ ] Edit/remove articles
+    - [x] Approve articles
+    - [x] Edit/remove articles
     - [ ] delete Comments
   - [x] Manage own articles
   - [ ] Admin report dashboard
