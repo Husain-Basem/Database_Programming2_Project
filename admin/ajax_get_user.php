@@ -2,6 +2,11 @@
 
 include '../prelude.php';
 
+// authorize request
+if (empty($_SESSION['username']) || !User::from_username($_SESSION['username'])->is_admin()) {
+    http_response_code(401);
+}
+
 switch ($_POST['userSearchBy']) {
     case 'userName':
         $user = User::from_username($_POST['userSearch']);

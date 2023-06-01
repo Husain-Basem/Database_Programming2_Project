@@ -3,8 +3,18 @@ include_once '../prelude.php';
 
 $article = Article::from_articleId($_GET['articleId']);
 
-// TODO: authorize user
-$user = User::from_userId($_SESSION['userId']);
+if (empty($_SESSION['username'])) {
+    // redirect to login page that returns to this page
+    header('Location: ' . BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+}
+
+$user = User::from_username($_SESSION['username']);
+
+// only allow admins and the author of the article
+if (!($user->is_admin() || ($user->is_author() && $article->writtenBy == $user->userId))) {
+    $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
+    header('Location: ' . BASE_URL . '/index.php');
+}
 
 // use the website header
 if ($user->is_admin()) {

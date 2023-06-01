@@ -5,16 +5,15 @@ include_once '../prelude.php';
 $pageTitle = 'Author Panel';
 include PROJECT_ROOT . '/header.html';
 
-if(empty($_SESSION['username'])){
-    header('Location: index.php');
-    session_destroy();
+if (empty($_SESSION['username'])) {
+  header('Location: ' . BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
 }
 
 $user = User::from_username($_SESSION['username']);
 
-if (!$user->is_author() && !$user->is_admin()){
-    header('Location: index.php');
-    session_destroy();
+if (!$user->is_author() && !$user->is_admin()) {
+  $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
+  header('Location: ' . BASE_URL . '/index.php');
 }
 
 ?>

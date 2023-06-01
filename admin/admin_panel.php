@@ -6,15 +6,16 @@ settype($fragment, 'string');
 $pageTitle = 'Admin Panel';
 include PROJECT_ROOT . '/header.html';
 
-if(empty($_SESSION['username'])){
-    header('Location: index.php');
-    session_destroy();
+if (empty($_SESSION['username'])) {
+    // redirect to login page that returns to this page
+    header('Location: ' . BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
 }
 
 $user = User::from_username($_SESSION['username']);
-if (!$user->is_admin()){
-    header('Location: index.php');
-    session_destroy();
+
+if (!$user->is_admin()) {
+    $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
+    header('Location: ' . BASE_URL . '/index.php');
 }
 ?>
 
@@ -42,8 +43,8 @@ if (!$user->is_admin()){
                 </li>
                 <li class="nav-item" role="presentation">
                     <a id="pending-articles-tab" aria-controls="pending-articles-pane"
-                        data-bs-target="#pending-articles-pane" data-bs-toggle="tab" class="w-100 nav-link" type="button"
-                        role="tab">
+                        data-bs-target="#pending-articles-pane" data-bs-toggle="tab" class="w-100 nav-link"
+                        type="button" role="tab">
                         Pending Articles
                     </a>
                 </li>
@@ -127,46 +128,46 @@ if (!$user->is_admin()){
 
 <!--  register form validation -->
 <script>
-$(() => {
-    'use strict';
+    $(() => {
+        'use strict';
 
-    const forms = $('.needs-validation');
+        const forms = $('.needs-validation');
 
-    // stop forms from submitting
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false)
-    });
-
-    // check username using AJAX with JQuery
-    $('#username').on('blur', function() {
-        $.get('<?=BASE_URL?>' + '/user/exists.php', { u: $(this).val() })
-            .done((exists) => {
-                if (exists == "1") {
-                    $(this).addClass('is-invalid');
-                    $('#usernameErr').html('Username is already used');
-                } else {
-                    $(this).removeClass('is-invalid');
-                    $('#usernameErr').html('Username must not be empty');
+        // stop forms from submitting
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-            });
-    });
+                form.classList.add('was-validated');
+            }, false)
+        });
 
-    $('#passwordConfirm').on('input', function() {
-      if ($(this).val() != $('#password').val()) {
-        $(this).addClass('is-invalid');
-      } else {
-        $(this).removeClass('is-invalid');
-      }
-    });
-    $('#password').on('input', ()=>$('#passwordConfirm').trigger('input'));
+        // check username using AJAX with JQuery
+        $('#username').on('blur', function () {
+            $.get('<?= BASE_URL ?>' + '/user/exists.php', { u: $(this).val() })
+                .done((exists) => {
+                    if (exists == "1") {
+                        $(this).addClass('is-invalid');
+                        $('#usernameErr').html('Username is already used');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                        $('#usernameErr').html('Username must not be empty');
+                    }
+                });
+        });
 
-});
+        $('#passwordConfirm').on('input', function () {
+            if ($(this).val() != $('#password').val()) {
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+        $('#password').on('input', () => $('#passwordConfirm').trigger('input'));
+
+    });
 </script>
 
 <?php

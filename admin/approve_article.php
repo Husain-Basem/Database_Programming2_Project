@@ -1,7 +1,10 @@
 <?php
 include_once '../prelude.php';
 
-// TODO: authorize user
+// authorize request
+if (empty($_SESSION['username']) || !User::from_username($_SESSION['username'])->is_admin()) {
+    http_response_code(401);
+}
 
 $article = Article::from_articleId($_GET['articleId']);
 $article->published = true;
