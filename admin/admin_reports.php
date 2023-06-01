@@ -4,27 +4,27 @@ include_once '../prelude.php';
 
 <div class="row">
     <div class="col-sm-12 col-lg-8">
+        <div class="mb-3">
+            <label for="ARquery" class="form-label">Report Type</label>
+            <select class="form-select" name="query" id="ARquery">
+                <option value="popular" selected>10 Most Popular Articles</option>
+                <option value="author">Articles by Author</option>
+            </select>
+        </div>
+        <div id="ARarticleDates" class="row align-items-end" style="display: none">
+            <div class="col mb-3">
+                <label for="ARdateBegin" class="form-label">From</label>
+                <input class="form-control" type="date" name="dateBegin" id="ARdateBegin" value="1970-01-01">
+            </div>
+            <div class="col mb-3">
+                <label for="ARdateEnd" class="form-label">To</label>
+                <input class="form-control" type="date" name="dateEnd" id="ARdateEnd" value="">
+            </div>
+            <div class="col mb-3">
+                <button id="ARarticlesDateFindBtn" class="btn btn-outline-primary">Find</button>
+            </div>
+        </div>
         <form id="ARform">
-            <div class="mb-3">
-                <label for="ARquery" class="form-label">Report Type</label>
-                <select class="form-select" name="query" id="ARquery">
-                    <option value="popular" selected>10 Most Popular Articles</option>
-                    <option value="author">Articles by Author</option>
-                </select>
-            </div>
-            <div id="ARarticleDates" class="row align-items-end" style="display: none">
-                <div class="col mb-3">
-                    <label for="ARdateBegin" class="form-label">From</label>
-                    <input class="form-control" type="date" name="dateBegin" id="ARdateBegin" value="1970-01-01">
-                </div>
-                <div class="col mb-3">
-                    <label for="ARdateEnd" class="form-label">To</label>
-                    <input class="form-control" type="date" name="dateEnd" id="ARdateEnd" value="">
-                </div>
-                <div class="col mb-3">
-                    <button id="ARarticlesDateFindBtn" type="submit" class="btn btn-outline-primary">Find</button>
-                </div>
-            </div>
             <div id="ARauthorSearch" class="row align-items-end" style="display: none">
                 <div class="col mb-3">
                     <label for="ARuserSearch" class="form-label">&nbsp;</label>
@@ -85,12 +85,12 @@ include_once '../prelude.php';
                     const articles = JSON.parse(articlesJSON);
                     for (const article of articles) {
                         const status =
-                            article.removed ? 'Removed' :
-                                article.approved ? 'Approved' :
-                                    article.published ? 'Pending Approval' : 'Unpublished';
+                            article.removed == '1' ? 'Removed' :
+                                article.approved == '1' ? 'Approved' :
+                                    article.published == '1' ? 'Pending Approval' : 'Unpublished';
                         $('#ARarticlesList').append(`
                        <li class="list-group-item d-flex align-items-baseline" title="'${article.title}' by ${article.author} - ${status} on ${article.date}">
-                           <span class="text-truncate">${article.title}</span>
+                           <a href="<?= BASE_URL ?>/displayNews/article.php?id=${article.articleId}" class="text-truncate">${article.title}</a>
                            <small class="ms-2 text-muted text-truncate">By ${article.author}</small>
                            <div class="ms-auto">
                            <small class="text-muted">${article.likes} Likes, ${article.dislikes} Dislikes</small>
@@ -128,10 +128,13 @@ include_once '../prelude.php';
                         article.removed ? 'danger' :
                             article.approved ? 'success' :
                                 article.published ? 'warning' : 'secondary';
+                    const href = article.approved ?
+                        '<?= BASE_URL ?>/displayNews/article.php?id=' + article.articleId :
+                        '<?= BASE_URL ?>/articleEdit/preview.php?articleId=' + article.articleId + '&returnUrl=<?= urlencode(BASE_URL . '/admin/admin_panel.php#report-tab') ?>';
                     $('#ARarticlesList').append(`
                        <li class="list-group-item d-flex align-items-baseline" title="'${article.title}' by ${article.author} - ${status} on ${article.date}">
                            <span class="badge rounded-pill me-2 text-bg-${statusBG}">${status}</span> 
-                           <span class="text-truncate">${article.title}</span>
+                           <a href="${href}" class="text-truncate">${article.title}</a>
                            <small class="ms-2 text-muted text-truncate">By ${article.author}</small>
                            <div class="btn-group ms-auto">
                                <a class="btn btn-outline-primary"

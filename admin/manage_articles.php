@@ -91,10 +91,13 @@ $count = $pagination->get_total_entries();
                             article.removed ? 'danger' :
                                 article.approved ? 'success' :
                                     article.published ? 'warning' : 'secondary';
+                        const href = article.approved ?
+                            '<?= BASE_URL ?>/displayNews/article.php?id=' + article.articleId :
+                            '<?= BASE_URL ?>/articleEdit/preview.php?articleId=' + article.articleId + '&returnUrl=<?= urlencode(BASE_URL . '/admin/admin_panel.php#manage-articles-tab') ?>';
                         $('#manageArticlesList').append(`
                                <li class="list-group-item d-flex align-items-baseline" title="'${article.title}' by ${article.author} - ${status} on ${article.date}">
                                    <span class="badge rounded-pill me-2 text-bg-${statusBG}">${status}</span> 
-                                   <span class="text-truncate">${article.title}</span>
+                                   <a href="${href}" class="text-truncate">${article.title}</a>
                                    <small class="ms-2 text-muted text-truncate">By ${article.author}</small>
                                    <div class="btn-group ms-auto">
                                        <a class="btn btn-outline-primary"

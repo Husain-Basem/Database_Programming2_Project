@@ -24,6 +24,8 @@ if ($user->is_admin()) {
     $pageTitle = 'Preview - ' . $article->title;
     $returnUrl = BASE_URL . '/articleEdit/edit_article.php?articleId=' . $article->articleId;
 }
+if (isset($_GET['returnUrl']))
+    $returnUrl = $_GET['returnUrl'];
 $headerIncludes = '<link rel="stylesheet" href="' . BASE_URL . '/css/quill.snow.css" />';
 include PROJECT_ROOT . '/header.html';
 ?>
