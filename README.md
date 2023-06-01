@@ -38,9 +38,9 @@ The following users are added by default:
   - [ ] Search bar
   - [ ] News list
 - [ ] Search page
-- [ ] Comments and rating
+- [x] Comments and rating
   - [x] Comments
-  - [ ] Ratings
+  - [x] Ratings
 - [x] Author panel
   - [x] Add/Edit articles
   - [x] Image upload
@@ -59,5 +59,5 @@ The following users are added by default:
 - [x] Display news article page 
   - [x] Display article
   - [x] Comments
-  - [ ] Ratings
-  - [ ] Attachments
+  - [x] Ratings
+  - [x] Attachments
