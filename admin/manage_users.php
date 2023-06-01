@@ -7,8 +7,7 @@ include_once '../prelude.php';
     <div class="row align-items-end">
         <div class="col-sm-12 col-md-5 col-lg-4 mb-3">
             <label for="userSearch" class="form-label">&nbsp;</label>
-            <input class="form-control" type="text" name="search" id="userSearch" placeholder="Username, Id or email"
-                value="aoeu">
+            <input class="form-control" type="text" name="search" id="userSearch" placeholder="Username, Id or email">
         </div>
         <div class="col-sm-12 col-md-5 col-lg-3 mb-3">
             <label for="userSearchBy" class="form-label">Find User By</label>

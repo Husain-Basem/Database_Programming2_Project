@@ -103,7 +103,11 @@ if (!$user->is_admin()) {
             <div id="manage-comments-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="manage-comments-tab"
                 tabindex="0">
                 <h2>Manage Comments</h2>
-                <?php require_once PROJECT_ROOT . '/admin/manage_comments.php'; ?>
+                <div class="card col-sm-12 col-md-9 col-lg-7">
+                    <div class="card-body">
+                        <span class="text-muted">As an administrator, you can remove comments from the article page itself.</span>
+                    </div>
+                </div>
             </div>
             <div id="manage-own-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="manage-own-tab"
                 tabindex="0">
@@ -135,4 +139,4 @@ if (!$user->is_admin()) {
 
 <?php
 include PROJECT_ROOT . '/footer.html';
-?>1
+?>

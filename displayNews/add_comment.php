@@ -28,4 +28,4 @@ if (!$success) {
 }
 
 // Redirect the user back to the article page
-header('Location: ' . BASE_URL . "/displayNews/article.php?id=$article_id");
+header('Location: ' . BASE_URL . "/displayNews/article.php?id=$article_id#comments");

@@ -59,19 +59,24 @@ class Pagination
             return null;
     }
 
-    public function pagination_controls(?int $currPage = null): string
+    public function pagination_controls(?int $currPage = null, ?string $urlParams = null, ?string $fragment = null): string
     {
         if (!isset($currPage))
             $currPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
         $lastPage = $this->get_total_pages();
-        $prevPage = $currPage > 1 ? $currPage - 1 : 1;
-        $nextPage = $currPage < $lastPage ? $currPage + 1 : $lastPage;
         $out = '
           <nav aria-label="Page navigation">
               <ul class="pagination">
         ';
         for ($p = 1; $p <= $lastPage; $p++) {
-            $out .= '<li class="page-item' . ($p == $currPage ? ' active' : '') . '"><a class="page-link page-number" data-page="' . $p . '" href="?p=' . $p . '">' . $p . '</a></li>';
+            if (isset($urlParams))
+                $href = '?' . preg_replace('/&{0,}p=[0-9]+/','', $urlParams) . '&p=' . $p;
+            else
+                $href = '?p=' . $p;
+            if (!empty($fragment))
+                $href .= '#' . $fragment;
+
+                $out .= '<li class="page-item' . ($p == $currPage ? ' active' : '') . '"><a class="page-link page-number" data-page="' . $p . '" href="' . $href . '">' . $p . '</a></li>';
         }
         $out .= '
               </ul>
