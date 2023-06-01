@@ -28,7 +28,9 @@ class Article
     /// @var string
     public $thumbnail;
     /// @var string|null $author Author name
-    private $author;
+    public $author;
+    /// @var int|null 
+    private $likes;
 
     public static function __set_state(array $state): Article
     {
@@ -47,6 +49,8 @@ class Article
         );
         if (isset($state['author']))
             $article->author = $state['author'];
+        if (isset($state['likes']))
+            $article->likes = $state['likes'];
         return $article;
 
     }
@@ -162,15 +166,16 @@ class Article
     }
 
 
-
-
     /**
      * @return array<Article>
      */
     public static function get_author_articles(int $authorId, bool $published = false): array
     {
         $db = Database::getInstance();
-        $articles = $db->query('select * from Articles where writtenBy = ' . $authorId . ' 
+        $articles = $db->query('select Articles.*, CONCAT(Users.firstName, \' \', Users.lastName) as author 
+                                from Articles 
+                                join Users on (Users.userId = Articles.writtenBy)
+                                where writtenBy = ' . $authorId . ' 
                                    and published = ' . (int) $published . '
                                    order by date desc')->fetch_all(MYSQLI_ASSOC);
         return array_map(function ($row) {
@@ -178,6 +183,25 @@ class Article
         }, $articles);
     }
 
+    /**
+     * @return array<array<string, string>>
+     */
+    public static function get_popular_articles(int $num, string $dateBegin, string $dateEnd): array
+    {
+        $db = Database::getInstance();
+        $articles = $db->query('select distinct
+                                       Articles.*,  
+                                       CONCAT(Users.firstName, \' \', Users.lastName) as author,
+                                       COUNT(CASE `like` when 1 then 1 else null end) over (partition by Articles.articleId) as likes,
+                                       COUNT(CASE `like` when 0 then 1 else null end) over (partition by Articles.articleId) as dislikes
+                                from Articles 
+                                join Ratings on (Ratings.articleId = Articles.articleId)
+                                join Users on (Users.userId = Articles.writtenBy)
+                                where Ratings.date between \'' . $dateBegin . '\' and \'' . $dateEnd . '\'
+                                order by likes desc
+                                limit ' . $num)->fetch_all(MYSQLI_ASSOC);
+        return $articles;
+    }
     /**
      * @return ?int inserted article id or null
      */
@@ -259,7 +283,38 @@ class Article
 
     public function get_author_name(): ?string
     {
-        return $this->author;
+        if (isset($this->author) && !empty($this->author))
+            return $this->author;
+        else {
+            $db = Database::getInstance();
+            $result = $db->query('select CONCAT(Users.firstName, \' \', Users.lastName)
+                                  from Articles join Users on (Articles.writtenBy = Users.userId)
+                                  where articleId = ' . $this->articleId);
+            if ($result && $result->num_rows > 0) {
+                $author = $result->fetch_array()[0];
+                $this->author = $author;
+                return $author;
+            } else
+                return null;
+        }
+    }
+
+    public function get_likes(): int
+    {
+        if (isset($this->likes))
+            return $this->likes;
+        else {
+            $db = Database::getInstance();
+            $result = $db->query('select COUNT(CASE `like` when 1 then 1 else null end) as likes
+                                from Ratings where articleId = ' . $this->articleId . '
+                                order by likes desc');
+            if ($result && $result->num_rows > 0) {
+                $likes = $result->fetch_array()[0];
+                $this->likes = $likes;
+                return $likes;
+            } else
+                return 0;
+        }
     }
 
 }

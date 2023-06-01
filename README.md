@@ -55,7 +55,7 @@ The following users are added by default:
     - [x] Edit/remove articles
     - [x] delete Comments
   - [x] Manage own articles
-  - [ ] Admin report dashboard
+  - [x] Admin report dashboard
 - [x] Display news article page 
   - [x] Display article
   - [x] Comments
