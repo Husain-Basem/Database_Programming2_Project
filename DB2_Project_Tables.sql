@@ -108,11 +108,10 @@ CREATE TABLE `Comments` (
 
 DROP TABLE IF EXISTS `Ratings`;
 CREATE TABLE `Ratings` (
-  `ratingId` int(20) NOT NULL,
   `articleId` int(20) NOT NULL,
   `like` tinyint(1) NOT NULL,
-  `reviewBy` int(20) DEFAULT NULL,
-  `ipAddress` int(20) NOT NULL,
+  `reviewBy` int(20) NOT NULL,
+  `ipAddress` varchar(45) NOT NULL,
   `date` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -230,8 +229,7 @@ ALTER TABLE `Comments`
   ADD KEY `articleId` (`articleId`);
 
 ALTER TABLE `Ratings`
-  ADD PRIMARY KEY (`ratingId`),
-  ADD UNIQUE KEY `articleId_2` (`articleId`,`ipAddress`),
+  ADD PRIMARY KEY (`articleId`,`reviewBy`,`ipAddress`),
   ADD KEY `articleId` (`articleId`);
 
 ALTER TABLE `Files`
@@ -248,9 +246,6 @@ ALTER TABLE `Articles`
 
 ALTER TABLE `Comments`
   MODIFY `commentId` int(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `Ratings`
-  MODIFY `ratingId` int(20) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `Files`
   MODIFY `fileId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;

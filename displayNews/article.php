@@ -19,6 +19,15 @@ if (!$article) {
     die("Error retrieving article data: " . $db->mysqli->error);
 }
 
+// get all ratings for this article
+$ratings = Rating::get_article_ratings($article_id);
+
+// get the current user rating for this article if any
+$userRating = Rating::get_user_rating($article_id);
+if (isset($userRating)) {
+    $userLike = $userRating ? 'checked' : '';
+    $userDislike = $userRating ? '' : 'checked';
+}
 
 // Query the database to retrieve the comments data
 $sql = "SELECT Comments.*, Users.userName 
@@ -51,12 +60,13 @@ include PROJECT_ROOT . '/header.html';
         </div>
     </div>
 
-    <?php if (!empty(File::get_files($article_id, true))) { ?>
+    <?php
+    $attachments = File::get_files($article->articleId, true);
+    if (!empty(File::get_files($article_id, true))) { ?>
         <hr>
         <h2>Attachments</h2>
         <div id="attachments" class="list-group mb-5 col-12 col-md-6 mx-auto">
             <?php
-            $attachments = File::get_files($article->articleId, true);
             foreach ($attachments as $a) {
                 echo '
                 <div class="list-group-item d-flex align-items-center">
@@ -64,19 +74,15 @@ include PROJECT_ROOT . '/header.html';
                   <small class="ms-3 text-muted">' . $a->fileSize . '</small>
                   <div class="ms-auto btn-group" role="group" aria-label="Attachment Actions">
                     <a class="upload-btn btn btn-outline-primary" href="' . $a->get_url() . '" downlod="' . $a->fileName . '">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
-                        viewBox="0 0 16 16">
-                        <path
-                          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                        <path
-                          d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
                       </svg>
                     </a>
                   </div>
                 </div>
                 ';
-            }
-            ?>
+            } ?>
         </div>
     <?php } ?>
     <hr>
@@ -108,6 +114,41 @@ include PROJECT_ROOT . '/header.html';
             <?php } ?>
         </div>
         <div class="col-md-6">
+            <div class="hstack align-items-center gap-3 mb-3">
+                <h2 class="mb-0">Rate this Article</h2>
+                <div class="btn-group ms-auto">
+                    <input type="radio" class="btn-check" name="like" id="like1" aria-label="Like" value="1"
+                        <?= $userLike ?>>
+                    <label for="like1" class="btn btn-outline-success" title="Like">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                        </svg>
+                    </label>
+                    <input type="radio" class="btn-check" name="like" id="like2" aria-label="Dislike" value="0"
+                        <?= $userDislike ?>>
+                    <label for="like2" class="btn btn-outline-danger" title="Dislike">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-hand-thumbs-down-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.378 1.378 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51.136.02.285.037.443.051.713.065 1.669.071 2.516-.211.518-.173.994-.68 1.2-1.272a1.896 1.896 0 0 0-.234-1.734c.058-.118.103-.242.138-.362.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2.094 2.094 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.162 3.162 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.757 12.437.28 11.5.28H8c-.605 0-1.07.08-1.466.217a4.823 4.823 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.815 2 2.434 2 3.279v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.591z" />
+                        </svg>
+                    </label>
+                </div>
+                <span>
+                    <span id="likes">
+                        <?= $ratings['likes'] ?>
+                    </span>
+                    Likes
+                </span>
+                <span class="me-4 me-sm-0">
+                    <span id="dislikes">
+                        <?= $ratings['dislikes'] ?>
+                    </span>
+                    Dislikes
+                </span>
+            </div>
             <h2>Add a Comment</h2>
 
             <?php if (isset($_SESSION['username'])) { ?>
@@ -116,8 +157,8 @@ include PROJECT_ROOT . '/header.html';
                     <input type="hidden" name="reviewBy" id="reviewBy" value="<?php echo $_SESSION['userId']; ?>">
                     <div class="mb-3">
                         <label for="name">Username:</label>
-                        <input class="form-control" type="text" name="name" id="name"
-                            value="<?= $_SESSION['username']; ?>" disabled readonly>
+                        <input class="form-control" type="text" name="name" id="name" value="<?= $_SESSION['username']; ?>"
+                            disabled readonly>
                     </div>
                     <div class="mb-3">
                         <label for="comment">Comment:</label>
@@ -139,6 +180,7 @@ include PROJECT_ROOT . '/header.html';
 
 <script>
     $(() => {
+        // format attachment file size
         function formatSize(size) {
             if (size < 1000) return size + ' Bytes';
             else if (size < 1_000_000) return (size / 1000).toFixed(2) + ' kB';
@@ -147,6 +189,17 @@ include PROJECT_ROOT . '/header.html';
 
         $.each($('#attachments small'), function () {
             $(this).text(formatSize($(this).text()));
+        });
+
+        // like and dislike
+        $('input[name="like"]').on('change', function () {
+            $.post('<?= BASE_URL ?>/displayNews/rate_article.php', {
+                articleId: <?= $article_id ?>,
+                like: $(this).val()
+            }, null, 'json').done(({ likes, dislikes }) => {
+                $('#likes').text(likes);
+                $('#dislikes').text(dislikes);
+            });
         });
     });
 </script>
