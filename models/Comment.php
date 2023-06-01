@@ -8,9 +8,7 @@ class Comment
     public $commentId;
     /// @var string
     public $comment;
-    /// @var string
-    public $rating;
-    /// @var int
+   /// @var int
     public $reviewBy;
     /// @var string
     public $date;
@@ -20,14 +18,12 @@ class Comment
     public function __construct(
         int $commentId,
         string $comment,
-        string $rating,
         int $reviewBy,
         string $date,
         int $articleId
     ) {
         $this->commentId = $commentId;
         $this->comment = $comment;
-        $this->rating = $rating;
         $this->reviewBy = $reviewBy;
         $this->date = $date;
         $this->articleId = $articleId;
@@ -45,10 +41,9 @@ class Comment
             $date = date('Y-m-d\TH:i:s');
             $db = Database::getInstance();
             $id = $db->pquery_insert(
-                'insert into Comments values (NULL,?,?,?,?,?)',
-                'ssisi',
+                'insert into Comments values (NULL,?,?,?,?)',
+                'sisi',
                 $this->comment,
-                $this->rating,
                 $this->reviewBy,
                 $date,
                 $this->articleId
@@ -68,11 +63,10 @@ class Comment
         $date = date('Y-m-d\TH:i:s');
         $db = Database::getInstance();
         return $db->pquery(
-            'update Comments set comment = ?, rating = ?, reviewBy = ?,
+            'update Comments set comment = ?, reviewBy = ?,
                     date = ?, articleId = ?) where commentId = ?',
-            'ssisii',
+            'sisii',
             $this->comment,
-            $this->rating,
             $this->reviewBy,
             $this->date,
             $this->articleId,

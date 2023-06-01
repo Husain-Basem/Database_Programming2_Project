@@ -100,11 +100,20 @@ INSERT INTO `Articles` (`articleId`, `title`, `content`, `readTime`, `writtenBy`
 DROP TABLE IF EXISTS `Comments`;
 CREATE TABLE `Comments` (
   `commentId` int(20) NOT NULL,
-  `comment` mediumtext DEFAULT NULL,
-  `rating` varchar(250) DEFAULT NULL,
+  `comment` mediumtext NOT NULL,
   `reviewBy` int(20) NOT NULL,
   `date` datetime NOT NULL,
-  `articleId` int(20) DEFAULT NULL
+  `articleId` int(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `Ratings`;
+CREATE TABLE `Ratings` (
+  `ratingId` int(20) NOT NULL,
+  `articleId` int(20) NOT NULL,
+  `like` tinyint(1) NOT NULL,
+  `reviewBy` int(20) DEFAULT NULL,
+  `ipAddress` int(20) NOT NULL,
+  `date` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `Files`;
@@ -220,6 +229,11 @@ ALTER TABLE `Comments`
   ADD PRIMARY KEY (`commentId`),
   ADD KEY `articleId` (`articleId`);
 
+ALTER TABLE `Ratings`
+  ADD PRIMARY KEY (`ratingId`),
+  ADD UNIQUE KEY `articleId_2` (`articleId`,`ipAddress`),
+  ADD KEY `articleId` (`articleId`);
+
 ALTER TABLE `Files`
   ADD PRIMARY KEY (`fileId`),
   ADD KEY `articleId` (`articleId`),
@@ -234,6 +248,9 @@ ALTER TABLE `Articles`
 
 ALTER TABLE `Comments`
   MODIFY `commentId` int(20) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `Ratings`
+  MODIFY `ratingId` int(20) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `Files`
   MODIFY `fileId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
