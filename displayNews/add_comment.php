@@ -19,8 +19,8 @@ $reviewBy = $_POST['reviewBy'];
 $comment = $_POST['comment'];
 
 // Insert the comment data into the database
-$sql = "INSERT INTO Comments (articleId, reviewBy, comment, date) VALUES (?, ?, ?, ?)";
-$success = $db->pquery($sql, "isss", $article_id, $reviewBy, $comment, date('Y-m-d\TH:i:s'));
+$commentObj = new Comment(null, $comment, $reviewBy, date('Y-m-d\TH:i:s'), $article_id);
+$success = $commentObj->insert_comment();
 
 // Check for errors
 if (!$success) {

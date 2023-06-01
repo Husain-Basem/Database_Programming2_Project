@@ -20,5 +20,51 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: 50%;
-    --bs-aspect-ratio: calc(3 / 4  * 100%);
+    --bs-aspect-ratio: calc(3 / 4 * 100%);
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0;
+}
+
+.page-item {
+    position: relative;
+}
+
+.page-item:not(:last-child)::before {
+    content: '';
+    background-color: #e5e5f7;
+    opacity: 0.3;
+    background-image: repeating-linear-gradient(45deg, #4d4d4d 25%, transparent 25%, transparent 75%, #4d4d4d 75%, #4d4d4d),
+        repeating-linear-gradient(45deg, #4d4d4d 25%, #e5e5f7 25%, #e5e5f7 75%, #4d4d4d 75%, #4d4d4d);
+    background-position: 0 0, 8px 10px;
+    background-size: 5px 5px;
+    border-block: 2px solid #4d4d4d;
+    width: 8px;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: -1000;
+}
+
+.page-item:not(:first-child)::after {
+    content: '';
+    background-color: #e5e5f7;
+    opacity: 0.3;
+    background-image: repeating-linear-gradient(45deg, #4d4d4d 25%, transparent 25%, transparent 75%, #4d4d4d 75%, #4d4d4d),
+        repeating-linear-gradient(45deg, #4d4d4d 25%, #e5e5f7 25%, #e5e5f7 75%, #4d4d4d 75%, #4d4d4d);
+    background-position: 0 0, 8px 10px;
+    background-size: 5px 5px;
+    border-block: 2px solid #4d4d4d;
+    width: 10px;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    z-index: -1000;
 }

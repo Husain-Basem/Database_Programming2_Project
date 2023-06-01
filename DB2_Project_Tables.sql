@@ -103,7 +103,8 @@ CREATE TABLE `Comments` (
   `comment` mediumtext NOT NULL,
   `reviewBy` int(20) NOT NULL,
   `date` datetime NOT NULL,
-  `articleId` int(20) NOT NULL
+  `articleId` int(20) NOT NULL,
+  `removed` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `Ratings`;

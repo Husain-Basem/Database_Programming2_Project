@@ -50,10 +50,10 @@ The following users are added by default:
     - [x] Delete users
     - [x] Edit users
     - [x] Register authors
-  - [ ] Manage all news articles
+  - [x] Manage all news articles
     - [x] Approve articles
     - [x] Edit/remove articles
-    - [ ] delete Comments
+    - [x] delete Comments
   - [x] Manage own articles
   - [ ] Admin report dashboard
 - [x] Display news article page 

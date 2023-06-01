@@ -4,6 +4,9 @@ include_once '../prelude.php';
 // Connect to the database using the Database class
 $db = Database::getInstance();
 
+if (isset($_SESSION['userId']))
+    $user = User::from_userId($_SESSION['userId']);
+
 // Check for errors
 if ($db->mysqli->connect_errno) {
     die("Connection failed: " . $db->mysqli->connect_error);
@@ -30,9 +33,11 @@ if (isset($userRating)) {
 }
 
 // Query the database to retrieve the comments data
+$user_id = isset($user) ? $user->userId : -1;
 $sql = "SELECT Comments.*, Users.userName 
         FROM Comments JOIN Users on Comments.reviewBy = Users.userId
         WHERE articleId = $article_id
+        AND (removed = 0 OR reviewBy = $user_id)
         ORDER BY date DESC";
 
 $comments = new Pagination(5, $sql);
@@ -95,17 +100,37 @@ include PROJECT_ROOT . '/header.html';
                 <p>No comments yet.</p>
             <?php } else { ?>
                 <?php $page = isset($_GET['p']) ? $_GET['p'] : 1; ?>
-                <?= $comments->pagination_controls($page, $_SERVER['QUERY_STRING'], 'comments') ?>
+                <div class="d-flex" style="align-items: first baseline">
+                    <span class="me-3">Page:</span>
+                    <?= $comments->pagination_controls($page, $_SERVER['QUERY_STRING'], 'comments') ?>
+                </div>
                 <ul class="list-group">
                     <?php foreach ($comments->get_page($page) as $comment) { ?>
-                        <li class="list-group-item">
-                            <p>
-                                <strong>
-                                    <?= '@' . $comment['userName']; ?>
-                                </strong> on
-                                <?= date('F j, Y g:i a', strtotime($comment['date'])); ?>:
-                            </p>
-                            <p>
+                        <li class="list-group-item" data-comment-id="<?= $comment['commentId'] ?>">
+                            <?php
+                            if ($comment['removed']) {
+                                $t = $user->is_admin() ? 'This' : 'Your';
+                                echo '<span class="text-danger" title="Other users cannot see this comment anymore">' .
+                                    $t . ' comment was removed by an administrator.</span>';
+                            }
+                            ?>
+                            <div class="hstack gap-2 mb-3">
+                                <span>
+                                    <strong>
+                                        <?= '@' . $comment['userName']; ?>
+                                    </strong>
+                                </span>
+                                <span>
+                                    on
+                                    <?= date('F j, Y g:i a', strtotime($comment['date'])); ?>:
+                                </span>
+                                <?php if (isset($user) && $user->is_admin()) { ?>
+                                    <button class="removeCommentBtn btn btn-sm btn-outline-danger ms-auto"
+                                        data-comment-id="<?= $comment['commentId'] ?>" data-bs-toggle="modal"
+                                        data-bs-target="#removeCommentModal">Remove</button>
+                                <?php } ?>
+                            </div>
+                            <p class="border-start border-2 ps-2">
                                 <?= $comment['comment']; ?>
                             </p>
                         </li>
@@ -167,15 +192,44 @@ include PROJECT_ROOT . '/header.html';
                     <input class="btn btn-primary" type="submit" value="Submit">
                 </form>
             <?php } else { ?>
-                <p>You must be logged in to leave a comment. <a
-                        href="<?= BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']) ?>">Click
-                        here
-                        to log
-                        in</a>.</p>
+                <p>
+                    You must be logged in to leave a comment.
+                    <a href="<?= BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']) ?>">
+                        Click here to log in
+                    </a>.
+                </p>
             <?php } ?>
         </div>
     </div>
 
+</div>
+
+
+<div class="modal fade" id="removeCommentModal" tabindex="-1" role="dialog" aria-labelledby="removeCommentModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeCommentModalTitle">Remove Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this comment?
+                <ul class="list-group">
+                    <li class="list-group-item" id="removeCommentModalComment"></li>
+                </ul>
+                It will be hidden from viewers other than the comment
+                author.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="<?= BASE_URL ?>/admin/remove_comment.php" method="post">
+                    <input type="hidden" name="commentId" id="removeCommentConfirmId">
+                    <button id="removeCommentConfirmBtn" type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -200,6 +254,16 @@ include PROJECT_ROOT . '/header.html';
                 $('#likes').text(likes);
                 $('#dislikes').text(dislikes);
             });
+        });
+
+        // comment remove
+        $('.removeCommentBtn').on('click', function () {
+            const commentId = $(this).data('commentId');
+            $('#removeCommentConfirmId').val(commentId);
+            $('#removeCommentModalComment').html(
+                $(`.list-group-item[data-comment-id="${commentId}"]`).html()
+            );
+            $('#removeCommentModalComment button').remove();
         });
     });
 </script>
