@@ -175,7 +175,15 @@ class User
     public function update_user(): bool
     {
         $db = Database::getInstance();
-        return $db->pquery('update Users set email = ?, description = ? where userId = ?', 'ssi', $this->email, $this->description, $this->userId);
+        return $db->pquery(
+            'update Users set username = ?, email = ?, type = ?, description = ? where userId = ?',
+            'ssssi',
+            $this->userName,
+            $this->email,
+            $this->type,
+            $this->description,
+            $this->userId
+        );
     }
 
 

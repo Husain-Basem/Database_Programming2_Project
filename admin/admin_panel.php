@@ -30,7 +30,7 @@ if (!$user->is_admin()) {
                 <li class="nav-item" role="presentation">
                     <a id="manage-users-tab" data-bs-target="#manage-users-pane" aria-controls="manage-users-pane"
                         data-bs-toggle="tab" role="tab" href="#" class="w-100 nav-link active" aria-current="page">
-                        Delete Users
+                        Edit/Delete Users
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -82,7 +82,7 @@ if (!$user->is_admin()) {
         <div class="col-sm-12 col-md-9 col-lg-10 tab-content border-start" id="myTabContent">
             <div id="manage-users-pane" class="tab-pane fade show active" role="tabpanel"
                 aria-labelleddy="manage-users-tab" tabindex="0">
-                <h2>Delete Users</h2>
+                <h2>Edit/Delete Users</h2>
                 <?php require_once PROJECT_ROOT . '/admin/manage_users.php'; ?>
             </div>
             <div id="register-author-pane" class="tab-pane fade" role="tabpanel" aria-labelleddy="register-author-tab"
@@ -121,55 +121,18 @@ if (!$user->is_admin()) {
 <script>
     // auto select tab from url fragment
     $(() => {
-        <?= !empty($fragment) ? "location.hash = '$fragment';" : '' ?>
+        if (<?= !empty($fragment) ? 'true' : 'false' ?>) {
+            window.history.pushState(null, "title", '<?= BASE_URL . '/admin/admin_panel.php' ?>');
+            location.hash = '<?= $fragment ?>';
+        }
         $(location.hash).tab('show');
-    });
-</script>
 
-<!--  register form validation -->
-<script>
-    $(() => {
-        'use strict';
-
-        const forms = $('.needs-validation');
-
-        // stop forms from submitting
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false)
+        $('#myTab .nav-link').on('click', function () {
+            location.hash = $(this)[0].id;
         });
-
-        // check username using AJAX with JQuery
-        $('#username').on('blur', function () {
-            $.get('<?= BASE_URL ?>' + '/user/exists.php', { u: $(this).val() })
-                .done((exists) => {
-                    if (exists == "1") {
-                        $(this).addClass('is-invalid');
-                        $('#usernameErr').html('Username is already used');
-                    } else {
-                        $(this).removeClass('is-invalid');
-                        $('#usernameErr').html('Username must not be empty');
-                    }
-                });
-        });
-
-        $('#passwordConfirm').on('input', function () {
-            if ($(this).val() != $('#password').val()) {
-                $(this).addClass('is-invalid');
-            } else {
-                $(this).removeClass('is-invalid');
-            }
-        });
-        $('#password').on('input', () => $('#passwordConfirm').trigger('input'));
-
     });
 </script>
 
 <?php
 include PROJECT_ROOT . '/footer.html';
-?>
+?>1
