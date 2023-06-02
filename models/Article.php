@@ -104,15 +104,12 @@ class Article
     /**
      * @return array<Article>
      */
-    public static function get_published_articles(): array
+    public static function get_published_articles(): Pagination
     {
-        $db = Database::getInstance();
-        $articles = $db->query('select * from Articles where 
+        $pagination = new Pagination(10, 'select * from Articles where 
                                    published = 1 and approved = 1
-                                   order by date desc')->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($row) {
-            return Article::__set_state($row);
-        }, $articles);
+                                   order by date desc');
+        return $pagination;
     }
 
     /**

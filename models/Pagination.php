@@ -48,13 +48,18 @@ class Pagination
             return null;
     }
 
-    public function get_page(int $page): ?array
+    public function get_page(?int $page = null, ?callable $map = null): ?array
     {
+        if (!isset($page))
+            $page = isset($_GET['p']) ? (int) $_GET['p'] : 1;
         $query = $this->sql . ' limit ' . $this->entriesPerPage . ' offset ' . $this->entriesPerPage * ($page - 1) . ';';
         $db = Database::getInstance();
         $result = $db->query($query);
         if ($result) {
-            return $result->fetch_all(MYSQLI_ASSOC);
+            if (isset($map))
+                return array_map($map, $result->fetch_all(MYSQLI_ASSOC));
+            else
+                return $result->fetch_all(MYSQLI_ASSOC);
         } else
             return null;
     }
@@ -70,13 +75,13 @@ class Pagination
         ';
         for ($p = 1; $p <= $lastPage; $p++) {
             if (isset($urlParams))
-                $href = '?' . preg_replace('/&{0,}p=[0-9]+/','', $urlParams) . '&p=' . $p;
+                $href = '?' . preg_replace('/&{0,}p=[0-9]+/', '', $urlParams) . '&p=' . $p;
             else
                 $href = '?p=' . $p;
             if (!empty($fragment))
                 $href .= '#' . $fragment;
 
-                $out .= '<li class="page-item' . ($p == $currPage ? ' active' : '') . '"><a class="page-link page-number" data-page="' . $p . '" href="' . $href . '">' . $p . '</a></li>';
+            $out .= '<li class="page-item' . ($p == $currPage ? ' active' : '') . '"><a class="page-link page-number" data-page="' . $p . '" href="' . $href . '">' . $p . '</a></li>';
         }
         $out .= '
               </ul>

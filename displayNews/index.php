@@ -6,32 +6,42 @@ $pageTitle = 'News';
 include PROJECT_ROOT . '/header.html';
 
 
-$articles = Article::get_published_articles();
+$pagination = Article::get_published_articles();
+$articles = $pagination->get_page(null, function ($row) {
+  return Article::__set_state($row);
+});
 
 ?>
 
 <div class="container">
-  <?php
-  foreach ($articles as $article) {
-    echo '
+  <h1>Latest News</h1>
+  <?= $pagination->pagination_controls() ?>
+  <div class="row">
+    <?php
+    foreach ($articles as $article) {
+      echo '
+<div class="col-12 col-lg-12">
 <div class="card mb-3">
   <div class="row g-0">
-    <div class="col">
+    <div class="col-md-4">
 <div class="card-img ratio" style="background-image: url(' . $article->thumbnail . ')" role="img"></div>
     </div>
-    <div class="col-7">
+    <div class="col-12 col-md-8">
       <div class="card-body">
         <h5 class="card-title">' . $article->title . '</h5>
-        <p class="card-text">' . substr(strip_tags($article->content), 0, 200) . '...</p>
+        <p class="card-text">' . substr(strip_tags($article->content), 0, 170) . '...</p>
         <p class="card-text"><small class="text-muted">Read time ' . $article->readTime . ' min</small></p>
         <a href="' . BASE_URL . '/displayNews/article.php?id=' . $article->articleId . '" class="btn btn-primary">Read More</a>
       </div>
     </div>
   </div>
 </div>
+</div>
         ';
-  }
-  ?>
+    }
+    ?>
+  </div>
+  <?= $pagination->pagination_controls() ?>
 </div>
 
 <?php
