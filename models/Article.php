@@ -102,7 +102,7 @@ class Article
     }
 
     /**
-     * @return array<Article>
+     * @return Pagination
      */
     public static function get_published_articles(): Pagination
     {
@@ -113,15 +113,12 @@ class Article
     }
 
     /**
-     * @return array<Article>
+     * @return Pagination
      */
-    public static function search_articles(string $search): array
+    public static function search_articles(string $search): Pagination
     {
         $db = Database::getInstance();
-        $articles = $db->query('call `SearchArticles`(\'' . $db->escape($search) . '\');')->fetch_all(MYSQLI_ASSOC);
-        return array_map(function ($row) {
-            return Article::__set_state($row);
-        }, $articles);
+        return new Pagination(10, 'call `SearchArticles`(\'' . $db->escape($search) . '\'', true);
     }
 
     /**

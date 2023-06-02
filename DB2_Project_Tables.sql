@@ -15,12 +15,15 @@ CONCAT(Users.firstName ,' ', Users.lastName) as author
 FROM Articles JOIN Users on (Users.userId = Articles.writtenBy)
 ORDER BY date DESC$$
 
-DROP PROCEDURE IF EXISTS `SearchArticles`$$
-CREATE PROCEDURE `SearchArticles` (IN `search` VARCHAR(255) CHARSET utf8mb4)   select Articles.*, CONCAT(Users.firstName, ' ', Users.lastName) as author
+DELIMITER $$
+CREATE PROCEDURE `SearchArticles`(IN `search` VARCHAR(255) CHARSET utf8mb4, IN `limit` INT, IN `offset` INT)
+select Articles.*, CONCAT(Users.firstName, ' ', Users.lastName) as author
 from Articles
 JOIN Users on (Articles.writtenBy = Users.userId)
 where match (title, content) against (search)
-ORDER BY date DESC$$
+ORDER BY date DESC
+limit `limit` offset `offset`$$
+DELIMITER ;
 
 DELIMITER ;
 

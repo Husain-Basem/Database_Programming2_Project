@@ -12,11 +12,14 @@ class Pagination
     private $totalEntries;
     /// @var ?int
     private $totalPages;
+    /// @var bool
+    private $procedure;
 
-    public function __construct(int $entriesPerPage, string $sql)
+    public function __construct(int $entriesPerPage, string $sql, bool $procedure = false)
     {
         $this->entriesPerPage = $entriesPerPage;
         $this->sql = $sql;
+        $this->procedure = $procedure;
     }
 
     public function get_total_entries(): ?int
@@ -25,7 +28,10 @@ class Pagination
             return $this->totalEntries;
 
         $db = Database::getInstance();
-        $result = $db->query($this->sql);
+        if ($this->procedure)
+            $result = $db->query($this->sql . ',0,0)');
+        else
+            $result = $db->query($this->sql);
         if ($result) {
             $this->totalEntries = $result->num_rows;
             return $this->totalEntries;
@@ -52,7 +58,10 @@ class Pagination
     {
         if (!isset($page))
             $page = isset($_GET['p']) ? (int) $_GET['p'] : 1;
-        $query = $this->sql . ' limit ' . $this->entriesPerPage . ' offset ' . $this->entriesPerPage * ($page - 1) . ';';
+        if ($this->procedure)
+            $query = $this->sql . ', ' . $this->entriesPerPage . ', ' . $this->entriesPerPage * ($page - 1) . ');';
+        else
+            $query = $this->sql . ' limit ' . $this->entriesPerPage . ' offset ' . $this->entriesPerPage * ($page - 1) . ';';
         $db = Database::getInstance();
         $result = $db->query($query);
         if ($result) {
