@@ -26,6 +26,8 @@ The following users are added by default:
 | tom      | 123      | Author |
 | admin1   | 123      | Admin  |
 
+Further registered users will have stricter password requirements. 
+
 ## Progress
 
 - [x] Users
