@@ -83,9 +83,9 @@ include_once '../prelude.php';
                         <div class="col-3 text-end"><label for="MUtype">Type</label></div>
                         <div class="col-9">
                             <select class="editable form-select" name="type" id="MUtype" disabled>
-                                <option value="viewer" ${user.type == 'VIEWER' ? 'selected' : ''}>Viewer</option>
-                                <option value="author" ${user.type == 'AUTHOR' ? 'selected' : ''}>Author</option>
-                                <option value="admin" ${user.type == 'ADMIN' ? 'selected' : ''}>Admin</option>
+                                <option value="VIEWER" ${user.type == 'VIEWER' ? 'selected' : ''}>Viewer</option>
+                                <option value="AUTHOR" ${user.type == 'AUTHOR' ? 'selected' : ''}>Author</option>
+                                <option value="ADMIN" ${user.type == 'ADMIN' ? 'selected' : ''}>Admin</option>
                             </select>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ include_once '../prelude.php';
                 event.stopPropagation();
                 event.preventDefault();
 
-                $.post('<?= BASE_URL ?>/admin/edit_user.php', {
+                $.post('<?= BASE_URL ?>/admin/ajax_edit_user.php', {
                     userId: $('#MUuserId').val(),
                     username: $('#MUusername').val(),
                     email: $('#MUemail').val(),

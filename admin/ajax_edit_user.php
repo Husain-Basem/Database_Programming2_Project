@@ -11,7 +11,7 @@ $user = User::from_userId($_POST['userId']);
 
 
 if (isset($_POST['username'])) {
-    if (User::username_exists($_POST['username'])) {
+    if ($_POST['username'] != $user->userName && User::username_exists($_POST['username'])) {
         http_response_code(400);
         echo 'Username taken';
         exit;

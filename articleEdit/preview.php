@@ -36,6 +36,11 @@ include PROJECT_ROOT . '/header.html';
         <a href="<?= $returnUrl ?>">
             <?= $user->is_admin() ? 'Back to admin panel' : 'Back to editor' ?>
         </a>
+        <span class="text-muted">This article is
+            <?= $article->removed ? 'Removed' :
+                ($article->approved ? 'Approved for publication' :
+                    ($article->published ? 'Pending approval' : 'Unpublished')) ?>
+        </span>
         <?php
         if ($user->is_admin()) {
             echo '
