@@ -75,20 +75,19 @@ class Pagination
 
     public function pagination_controls(?int $currPage = null, ?string $urlParams = null, ?string $fragment = null): string
     {
-        
+
         if (!isset($currPage))
             $currPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
         $lastPage = $this->get_total_pages();
-$cat = $_GET['c'];
         $out = '
           <nav aria-label="Page navigation">
               <ul class="pagination">
  ';
         for ($p = 1; $p <= $lastPage; $p++) {
             if (isset($urlParams))
-                $href = '?' . preg_replace('/&{0,}p=[0-9]+/', '', $urlParams) . '&p=' . $p . '&c=' . $cat;
+                $href = '?' . preg_replace('/&{0,}p=[0-9]+/', '', $urlParams) . '&p=' . $p;
             else
-                $href = '?p=' . $p. '&c=' . $cat;
+                $href = '?p=' . $p;
             if (!empty($fragment))
                 $href .= '#' . $fragment;
 

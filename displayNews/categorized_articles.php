@@ -4,38 +4,44 @@ include '../prelude.php';
 include PROJECT_ROOT . '/header.html';
 $cat = $_GET['c'];
 
-if ($cat == 'local'){
+if ($cat == 'local') {
     $pageTitle = 'Local News';
-    $genre = "local";}
-if ($cat == 'international'){
+    $genre = "local";
+}
+if ($cat == 'international') {
     $pageTitle = 'International News';
-    $genre = "international";}
-if ($cat == 'economy'){
+    $genre = "international";
+}
+if ($cat == 'economy') {
     $pageTitle = 'Economy News';
-    $genre = "economy";}
-if ($cat == 'tourism'){
+    $genre = "economy";
+}
+if ($cat == 'tourism') {
     $pageTitle = 'Tourism';
-    $genre = "tourism";}
+    $genre = "tourism";
+}
 
 
 
 
 $pagination = Article::get_categorized_articles($genre);
 $articles = $pagination->get_page(null, function ($row) {
-  return Article::__set_state($row);
+    return Article::__set_state($row);
 });
 
 ?>
 
 <div class="container">
-  <h1><?= $pageTitle ?></h1>
+    <h1>
+        <?= $pageTitle ?>
+    </h1>
 
-<!--  display news list -->
-  <?= $pagination->pagination_controls() ?>
-  <div class="row">
-    <?php
-    foreach ($articles as $article) {
-      echo '     
+    <!--  display news list -->
+    <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']) ?>
+    <div class="row">
+        <?php
+        foreach ($articles as $article) {
+            echo '     
 <div class="col-12 col-lg-12">
 <div class="card mb-3">
   <div class="row g-0">
@@ -54,10 +60,10 @@ $articles = $pagination->get_page(null, function ($row) {
 </div>
 </div>
         ';
-    }
-    ?>
-  </div>
-  <?= $pagination->pagination_controls() ?>
+        }
+        ?>
+    </div>
+    <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']) ?>
 </div>
 
 <?php
