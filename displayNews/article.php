@@ -36,9 +36,14 @@ if (isset($userRating)) {
 $user_id = isset($user) ? $user->userId : -1;
 $sql = "SELECT Comments.*, Users.userName 
         FROM Comments JOIN Users on Comments.reviewBy = Users.userId
-        WHERE articleId = $article_id
-        AND (removed = 0 OR reviewBy = $user_id)
-        ORDER BY date DESC";
+        WHERE articleId = $article_id";
+// allow admins to see removed comments
+if (!(isset($user) && $user->is_admin()))
+$sql .=
+        " AND (removed = 0 OR reviewBy = $user_id)";
+
+$sql .=
+        ' ORDER BY date DESC';
 
 $comments = new Pagination(5, $sql);
 
