@@ -115,6 +115,22 @@ class Article
     /**
      * @return Pagination
      */
+    
+    /**
+     * @return Pagination
+     */
+    public static function get_categorized_articles(string $genre): Pagination
+    {
+        $pagination = new Pagination(10, 'select * from Articles where 
+                                   published = 1 and approved = 1 and category = \''. $genre .'\'
+                                   order by date desc');
+        return $pagination;
+    }
+
+    /**
+     * @return Pagination
+     */
+    
     public static function search_articles(string $search): Pagination
     {
         $db = Database::getInstance();
