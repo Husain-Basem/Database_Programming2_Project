@@ -21,6 +21,7 @@ $article = Article::from_articleId($article_id);
 if (!$article) {
     die("Error retrieving article data: " . $db->mysqli->error);
 }
+$article->get_author_name();
 
 // get all ratings for this article
 $ratings = Rating::get_article_ratings($article_id);
@@ -39,11 +40,11 @@ $sql = "SELECT Comments.*, Users.userName
         WHERE articleId = $article_id";
 // allow admins to see removed comments
 if (!(isset($user) && $user->is_admin()))
-$sql .=
+    $sql .=
         " AND (removed = 0 OR reviewBy = $user_id)";
 
 $sql .=
-        ' ORDER BY date DESC';
+    ' ORDER BY date DESC';
 
 $comments = new Pagination(5, $sql);
 
@@ -58,15 +59,31 @@ include PROJECT_ROOT . '/header.html';
     <h1>
         <?= $article->title ?>
     </h1>
-    <div>readtime:
-        <?= $article->readTime ?> min
+    <div class="d-flex gap-3 align-items-baseline text-muted flex-wrap flex-sm-nowrap">
+        <span class="badge rounded-pill text-bg-primary vertical-align-middle">
+            <?= $article->display_category() ?>
+        </span>
+        <span class="ms-auto ms-sm-0">
+            Read Time:
+            <?= $article->readTime ?> min
+        </span>
+        <span class="ms-0 ms-sm-auto me-auto me-sm-0">
+            By
+            <?= $article->author ?>
+        </span>
+        <span>
+            Published on
+            <span id="articleDate">
+                <?= date('F j, Y', strtotime($article->date)) ?>
+            </span>
+        </span>
     </div>
+
+    <hr>
 
     <div class="ql-container">
         <div class="ql-snow clearfix">
-            <div class="ql-editor">
-                <?= $article->content ?>
-            </div>
+            <div class="ql-editor"><?= $article->content ?></div>
         </div>
     </div>
 
