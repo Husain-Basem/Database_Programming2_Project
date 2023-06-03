@@ -16,7 +16,14 @@ $user = User::from_username($_SESSION['username']);
 // only allow admins and the author of the article
 if (!($user->is_admin() || ($user->is_author() && $article->writtenBy == $user->userId))) {
   $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
+  session_write_close();
   header('Location: ' . BASE_URL . '/index.php');
+}
+
+if ($article->approved && (!$user->is_admin())) {
+  $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Cannot Edit a published article');
+  session_write_close();
+  header('Location: ' . BASE_URL . '/articleEdit/author_panel.php');
 }
 
 

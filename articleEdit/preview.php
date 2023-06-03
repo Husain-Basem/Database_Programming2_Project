@@ -26,6 +26,10 @@ if ($user->is_admin()) {
 }
 if (isset($_GET['returnUrl']))
     $returnUrl = $_GET['returnUrl'];
+if (isset($_GET['returnName']))
+    $returnName = $_GET['returnName'];
+else
+    $returnName = 'editor';
 $headerIncludes = '<link rel="stylesheet" href="' . BASE_URL . '/css/quill.snow.css" />';
 include PROJECT_ROOT . '/header.html';
 ?>
@@ -36,7 +40,7 @@ include PROJECT_ROOT . '/header.html';
         <div class="card-body">
             <div class="hstack gap-3">
                 <a href="<?= $returnUrl ?>">
-                    <?= $user->is_admin() ? 'Back to admin panel' : 'Back to editor' ?>
+                    <?= $user->is_admin() ? 'Back to admin panel' : 'Back to ' . $returnName ?>
                 </a>
                 <span class="text-muted">This article is
                     <?= $article->removed ? 'Removed' :
@@ -84,7 +88,9 @@ include PROJECT_ROOT . '/header.html';
 
     <div class="ql-container">
         <div class="ql-snow clearfix">
-            <div class="ql-editor"><?= $article->content ?></div>
+            <div class="ql-editor">
+                <?= $article->content ?>
+            </div>
         </div>
     </div>
 

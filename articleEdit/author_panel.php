@@ -54,10 +54,14 @@ if (!$user->is_author() && !$user->is_admin()) {
       $href = $article->approved ?
         (BASE_URL . '/displayNews/article.php?id=' . $article->articleId)
         : (BASE_URL . '/articleEdit/preview.php?articleId=' . $article->articleId);
+      if (!$article->approved)
+        $href .= '&returnUrl=' . urlencode(BASE_URL . '/articleEdit/author_panel.php') . '&returnName=Author%20Panel';
       echo '
   <a href="' . $href . '" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100">
-      <span class="badge rounded-pill text-bg-primary vertical-align-middle">' . $article->display_category() . '</span>
+    <div class="d-flex w-100" style="align-items: first baseline">
+      ' . ((!$article->approved && !$article->removed) ? '<span class="me-3 badge rounded-pill text-bg-warning vertical-align-middle" title="Viewers can read this article after an administrator approves it">Pending approval</span>' : '') . '
+      ' . (($article->removed) ? '<span class="me-3 badge rounded-pill text-bg-danger" title="An administrator removed this article">Removed</span>' : '') . '
+      <span class="badge rounded-pill text-bg-primary">' . $article->display_category() . '</span>
       <h5 class="mb-0 ms-3">' . $article->title . '</h5>
       <small class="text-muted ms-auto">' . $article->date . '</small>
     </div>
