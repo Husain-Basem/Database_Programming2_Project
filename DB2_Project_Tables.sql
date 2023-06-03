@@ -9,22 +9,23 @@ SET time_zone = "+00:00";
 
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `GetArticles`$$
-CREATE PROCEDURE `GetArticles` ()   SELECT Articles.*, 
+CREATE OR REPLACE PROCEDURE `GetLatestArticles`(IN `limit` INT, IN `offset` INT)
+SELECT Articles.*, 
 CONCAT(Users.firstName ,' ', Users.lastName) as author
 FROM Articles JOIN Users on (Users.userId = Articles.writtenBy)
-ORDER BY date DESC$$
-
-DELIMITER $$
-CREATE PROCEDURE `SearchArticles`(IN `search` VARCHAR(255) CHARSET utf8mb4, IN `limit` INT, IN `offset` INT)
-select Articles.*, CONCAT(Users.firstName, ' ', Users.lastName) as author
-from Articles
-JOIN Users on (Articles.writtenBy = Users.userId)
-where match (title, content) against (search)
+WHERE published = 1 and approved = 1
 ORDER BY date DESC
 limit `limit` offset `offset`$$
 DELIMITER ;
 
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE `GetCategorizedArticles`(IN `cat` VARCHAR(50), IN `limit` INT, IN `offset` INT)
+SELECT Articles.*, 
+CONCAT(Users.firstName ,' ', Users.lastName) as author
+FROM Articles JOIN Users on (Users.userId = Articles.writtenBy)
+WHERE category = `cat` and published = 1 and approved = 1
+ORDER BY date DESC
+limit `limit` offset `offset`$$
 DELIMITER ;
 
 DROP TABLE IF EXISTS `Articles`;

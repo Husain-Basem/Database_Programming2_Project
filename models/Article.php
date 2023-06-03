@@ -106,38 +106,26 @@ class Article
      */
     public static function get_published_articles(): Pagination
     {
-        $pagination = new Pagination(10, 'select * from Articles where 
-                                   published = 1 and approved = 1
-                                   order by date desc');
+        $pagination = new Pagination(10, 'call GetLatestArticles(', true);
         return $pagination;
     }
 
     /**
      * @return Pagination
      */
-    
+
     /**
      * @return Pagination
      */
     public static function get_categorized_articles(string $genre): Pagination
     {
-        $pagination = new Pagination(10, 'select * from Articles where 
-                                   published = 1 and approved = 1 and category = \''. $genre .'\'
-                                   order by date desc');
+        $db = Database::getInstance();
+        $pagination = new Pagination(10, 'call GetCategorizedArticles(' . "'{$db->escape($genre)}', ", true);
         return $pagination;
     }
 
     /**
-     * @return Pagination
-     */
-    
-    public static function search_articles(string $search): Pagination
-    {
-        $db = Database::getInstance();
-        return new Pagination(10, 'call `SearchArticles`(\'' . $db->escape($search) . '\'', true);
-    }
-
-    /**
+     * Searches article titles using contains exact search (for admins only)
      * @return array<Article>
      */
     public static function search_articles_exact(?string $search = null, ?bool $published = null, ?bool $approved = null, ?bool $removed = null): Pagination

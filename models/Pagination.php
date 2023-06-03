@@ -29,7 +29,7 @@ class Pagination
 
         $db = Database::getInstance();
         if ($this->procedure)
-            $result = $db->query($this->sql . ',0,0)');
+            $result = $db->query($this->sql . '-1,0)');
         else
             $result = $db->query($this->sql);
         if ($result) {
@@ -59,7 +59,7 @@ class Pagination
         if (!isset($page))
             $page = isset($_GET['p']) ? (int) $_GET['p'] : 1;
         if ($this->procedure)
-            $query = $this->sql . ', ' . $this->entriesPerPage . ', ' . $this->entriesPerPage * ($page - 1) . ');';
+            $query = $this->sql . $this->entriesPerPage . ', ' . $this->entriesPerPage * ($page - 1) . ');';
         else
             $query = $this->sql . ' limit ' . $this->entriesPerPage . ' offset ' . $this->entriesPerPage * ($page - 1) . ';';
         $db = Database::getInstance();

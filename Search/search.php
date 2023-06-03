@@ -13,19 +13,20 @@ $sql = "SELECT Articles.*, CONCAT(Users.firstName, ' ', Users.lastName) as autho
         FROM Articles JOIN Users on (Articles.writtenBy = Users.userId) 
         WHERE published = 1 and approved = 1";
 
+// search using fulltext index
 if (!empty($query)) {
     $sql .= " and match (title,content) against ('$query')";
 }
 
 if (!empty($start_date) && !empty($end_date)) {
-    $sql .= " AND date BETWEEN '$start_date' AND '$end_date'";
+    $sql .= " AND Articles.date BETWEEN '$start_date' AND '$end_date'";
 }
 
 if (!empty($author)) {
     $sql .= " AND CONCAT(Users.firstName, ' ', Users.lastName) like '%$author%'";
 }
 
-$sql .= " ORDER BY date DESC";
+$sql .= " ORDER BY Articles.date DESC";
 
 $pagination = new Pagination(10, $sql);
 
@@ -96,10 +97,12 @@ include PROJECT_ROOT . '/header.html'; ?>
         </div>
     </div>
 
-    <div class="d-flex gap-3" style="align-items: first baseline;">
-        Page:
-        <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']); ?>
-    </div>
+    <?php if ($pagination->get_total_entries() > 0) { ?>
+        <div class="d-flex gap-3" style="align-items: first baseline;">
+            Page:
+            <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']); ?>
+        </div>
+    <?php } ?>
     <?php
     // Check if search results were found
     if ($pagination->get_total_entries() == 0) {
@@ -139,10 +142,12 @@ include PROJECT_ROOT . '/header.html'; ?>
         }
     }
     ?>
-    <div class="d-flex gap-3" style="align-items: first baseline;">
-        Page:
-        <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']); ?>
-    </div>
+    <?php if ($pagination->get_total_entries() > 0) { ?>
+        <div class="d-flex gap-3" style="align-items: first baseline;">
+            Page:
+            <?= $pagination->pagination_controls(null, $_SERVER['QUERY_STRING']); ?>
+        </div>
+    <?php } ?>
 </div>
 
 
