@@ -198,7 +198,7 @@ include PROJECT_ROOT . '/header.html';
 
         // check username using AJAX with JQuery
         $('#username').on('blur', function () {
-            $.get('<?= BASE_URL ?>' + '/user/exists.php', { u: $(this).val() })
+            $.get('<?= BASE_URL ?>' + '/user/ajax_exists.php', { u: $(this).val() })
                 .done((exists) => {
                     if (exists == "1") {
                         $(this).addClass('is-invalid');

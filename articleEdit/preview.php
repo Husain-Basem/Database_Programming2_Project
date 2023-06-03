@@ -88,9 +88,7 @@ include PROJECT_ROOT . '/header.html';
 
     <div class="ql-container">
         <div class="ql-snow clearfix">
-            <div class="ql-editor">
-                <?= $article->content ?>
-            </div>
+            <div class="ql-editor"><?= $article->content ?></div>
         </div>
     </div>
 

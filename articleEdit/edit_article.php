@@ -225,7 +225,7 @@ include PROJECT_ROOT . '/header.html';
     quill.root.innerHTML = $('#template').html();
     $('#template').remove();
 
-    function uploader(file, action = '<?= BASE_URL ?>/articleEdit/upload_image.php', rel = '..') {
+    function uploader(file, action = '<?= BASE_URL ?>/articleEdit/ajax_upload_image.php', rel = '..') {
       return new Promise((resolve, reject) => {
         let formData = new FormData();
         formData.append('myFile', file);
@@ -263,7 +263,7 @@ include PROJECT_ROOT . '/header.html';
 
     // save article using AJAX with JQuery
     $('#saveBtn').on('click', function (_event, extraCallback = null) {
-      $.post('<?= BASE_URL . '/articleEdit/save_article.php' ?>', {
+      $.post('<?= BASE_URL . '/articleEdit/ajax_save_article.php' ?>', {
         articleId: <?= $article->articleId ?>,
         title: $('#title').val(),
         category: $('#category').val(),
@@ -317,7 +317,7 @@ include PROJECT_ROOT . '/header.html';
 
     $('#attachment').on('change', () => {
       const file = $('#attachment')[0].files[0];
-      uploader(file, '<?= BASE_URL ?>/articleEdit/upload_attachment.php', '').then(uploadJSON => {
+      uploader(file, '<?= BASE_URL ?>/articleEdit/ajax_upload_attachment.php', '').then(uploadJSON => {
         const upload = JSON.parse(uploadJSON);
         let fileSizeString = formatSize(file.size);
         $('#attachments').append(`
@@ -366,7 +366,7 @@ include PROJECT_ROOT . '/header.html';
 
   function deleteAttachmentOnClick(thisEl) {
     const item = $(thisEl).parents('.list-group-item');
-    $.post('<?= BASE_URL ?>/articleEdit/delete_attachment.php', { fileId: $(thisEl).data('fileId') })
+    $.post('<?= BASE_URL ?>/articleEdit/ajax_delete_attachment.php', { fileId: $(thisEl).data('fileId') })
       .done(() => {
         console.log("deleted");
         item.addClass('fade');

@@ -269,7 +269,7 @@ include PROJECT_ROOT . '/header.html';
 
         // like and dislike
         $('input[name="like"]').on('change', function () {
-            $.post('<?= BASE_URL ?>/displayNews/rate_article.php', {
+            $.post('<?= BASE_URL ?>/displayNews/ajax_rate_article.php', {
                 articleId: <?= $article_id ?>,
                 like: $(this).val()
             }, null, 'json').done(({ likes, dislikes }) => {

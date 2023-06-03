@@ -149,7 +149,7 @@ $count = $pagination->get_total_entries();
             $('#articleRemoveTitle').text($(this).data('articleTitle'));
             $('#articleRemoveConfirmBtn').on('click',
                 () => {
-                    $.post('<?= BASE_URL ?>/admin/remove_article.php', {
+                    $.post('<?= BASE_URL ?>/admin/ajax_remove_article.php', {
                         articleId: $(this).data('articleId')
                     }).done(() => {
                         $('.toast-container').append(`
