@@ -24,7 +24,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" href="<?= BASE_URL . '/index.php'?>">Home</a>
           </li>
@@ -45,10 +45,12 @@
           <li class="nav-item">
             <a class="nav-link" href="<?= BASE_URL . '/displayNews/categorized_articles.php?c=tourism'?>">Tourism</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="<?= BASE_URL . '/Search/search.php'?>">Search</a>
-          </li>
         </ul>
+        <form class="d-flex flex-grow-1 mx-0 mx-lg-5" role="search" action="<?= BASE_URL . '/Search/search.php'?>"
+          method="get">
+          <input class="form-control me-2" type="search" placeholder="Search Articles" aria-label="Search" name="q">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
         <ul class="navbar-nav">
           <?php include_once PROJECT_ROOT . '/user/navbar.php'?>
         </ul>
