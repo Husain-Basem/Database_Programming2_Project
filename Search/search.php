@@ -1,14 +1,38 @@
+<?php
+include_once '../prelude.php';
+
+// Get search criteria from form submission
+$start_date = $_GET['start_date'];
+$end_date = $_GET['end_date'];
+$title = $_GET['title'];
+$author = $_GET['author'];
 
 
+// Build SQL query based on search criteria
+$sql = "SELECT * FROM Articles WHERE 1=1";
 
-<!-- News Articles Grid -->
+if (!empty($title)) {
+    $sql .= " and match (title,content) against ('$title')";
+}
 
-    <?php
-    include_once '../prelude.php';
+if (!empty($start_date) && !empty($end_date)) {
+    $sql .= " AND date BETWEEN '$start_date' AND '$end_date'";
+}
+
+if (!empty($author)) {
+    $sql .= " AND author like '%$author%'";
+}
+
+$sql .= " ORDER BY date DESC";
+
+$pagination = new Pagination(10, $sql);
+
+
 // use the website header
-$pageTitle = $article['title'];
+$pageTitle = 'Search Articles';
 include PROJECT_ROOT . '/header.html'; ?>
 
+?>
 
 <!-- Search Bar -->
 <!--<form action="search.php" method="GET">
@@ -17,21 +41,21 @@ include PROJECT_ROOT . '/header.html'; ?>
 </form>-->
 <!--
 <form action="search.php" method="GET">
-	<label for="start_date">Start Date:</label>
-	<input type="date" name="start_date" id="start_date">
-	<label for="end_date">End Date:</label>
-	<input type="date" name="end_date" id="end_date">
-	<br>
-	<label for="title">Title:</label>
-	<input type="text" name="title" id="title">
-	<br>
-	<label for="author">Author:</label>
-	<input type="text" name="author" id="author">
-	<br>
-	<label for="most_read">Most Read:</label>
-	<input type="checkbox" name="most_read" id="most_read">
-	<br>
-	<button type="submit">Search</button>
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" id="start_date">
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" id="end_date">
+    <br>
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title">
+    <br>
+    <label for="author">Author:</label>
+    <input type="text" name="author" id="author">
+    <br>
+    <label for="most_read">Most Read:</label>
+    <input type="checkbox" name="most_read" id="most_read">
+    <br>
+    <button type="submit">Search</button>
 </form>-->
 
 
@@ -48,18 +72,16 @@ include PROJECT_ROOT . '/header.html'; ?>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" type="date" name="start_date" id="start_date" placeholder
-                                        value="<?= $_GET['start_date'] ?>" required>
+                                    <input class="form-control" type="date" name="start_date" id="start_date"
+                                        placeholder value="<?= $_GET['start_date'] ?>" >
                                     <label for="start_Date">Start Date:</label>
-                                    <div class="invalid-feedback" id="start_dateErr">Start date must not be empty</div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-floating mb-3">
                                     <input class="form-control" type="date" name="end_date" id="end_date" placeholder
-                                        value="<?= $_GET['end_date'] ?>" required>
+                                        value="<?= $_GET['end_date'] ?>" >
                                     <label for="end_Date">End Date:</label>
-                                    <div class="invalid-feedback" id="end_dateErr">End date must not be empty</div>
                                 </div>
                             </div>
                         </div>
@@ -67,35 +89,22 @@ include PROJECT_ROOT . '/header.html'; ?>
                             <div class="col-sm-6">
                                 <div class="form-floating mb-3">
                                     <input class="form-control" type="text" name="title" id="title" placeholder
-                                        value="<?= $_GET['title'] ?>" pattern="[a-zA-Z0-9._-]{3,}" required>
+                                        value="<?= $_GET['title'] ?>" >
                                     <label for="title">Title</label>
-                                    <div class="invalid-feedback" id="titleErr">Title must be at least 3
-                                        charachters (letters, numbers,&emsp;.&nbsp;_&nbsp;-&nbsp;)</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" type="text" name="author" id="author"
-                                        minlength="8" placeholder value="<?= $_GET['author'] ?>" pattern="[a-zA-Z0-9._-]{3,}" required>
-                                    <label for="password">Author</label>
-                                    <div class="invalid-feedback" id="passwordErr">
-                                        Author must be at least 3 characters long </div>
-                                </div>
-                            </div> 
-                        </div>
-
-			<div class="row">
-			    <div class="col-sm-6">
-                                <div class="form-check">
-                                      <input class="form-check-input" type="checkbox" name="most_read" id="most_read">
-  				      <label class="form-check-label" for="most_read">Most Read:</label>
-  			              </label>
+                                    <input class="form-control" type="text" name="author" id="author" minlength="8"
+                                        placeholder value="<?= $_GET['author'] ?>" 
+                                        >
+                                    <label for="author">Author</label>
                                 </div>
                             </div>
-			</div>
-                        <br>
+                        </div>
+
                         <button class="w-100 btn btn-primary" type="submit">Search</button>
                         <input type="text" name="submitted" value="submitted" hidden>
                     </form>
@@ -103,86 +112,28 @@ include PROJECT_ROOT . '/header.html'; ?>
             </div>
         </div>
     </div>
+
+    <?php
+    // Check if search results were found
+    if ($pagination->get_total_entries() == 0) {
+        echo "<p>No results found for your search criteria.</p>";
+    } else {
+        // Loop through search results and display them in a grid format (similar to Home Page)
+        $articles = $pagination->get_page(null, function ($row) {
+            return Article::__set_state($row);
+        });
+
+        foreach ($articles as $article) {
+            echo "<div class='card-body'>";
+            echo "<h2'>" . $article->title . "</h2>";
+            echo "<p>" . $article->author . "</p>";
+            echo "<img width=100px src='" . $article->thumbnail . "' alt='" . $article->title . "'>";
+            echo '<a href="' . BASE_URL . '/displayNews/article.php?id=' . $article->articleId . '">Read More...</a>';
+            echo "</div>";
+        }
+    }
+    ?>
 </div>
 
 
-<?php
-// Get search criteria from form submission
-$start_date = $_GET['start_date'];
-$end_date = $_GET['end_date'];
-$title = $_GET['title'];
-$author = $_GET['author'];
-$most_read = isset($_GET['most_read']) ? 1 : 0;
-
-
-// Build SQL query based on search criteria
-$sql = "SELECT * FROM articles WHERE";
-
-if (!empty($title)) {
-	$sql .= " (title LIKE '%$title%' OR short_description LIKE '%$title%')";
-}
-
-if (!empty($start_date) && !empty($end_date)) {
-	$sql .= " AND date_published BETWEEN '$start_date' AND '$end_date'";
-}
-
-if (!empty($author)) {
-	$sql .= " AND author = '$author'";
-}
-
-if ($most_read) {
-	$sql .= " ORDER BY views DESC";
-} else {
-	$sql .= " ORDER BY date_published DESC";
-}
-
-$sql .= " LIMIT 10";
-
-
-// Check if search results were found
-if (mysqli_num_rows($result) == 0) {
-	echo "<p>No results found for your search criteria.</p>";
-} else {
-	// Loop through search results and display them in a grid format (similar to Home Page)
-	while ($row = mysqli_fetch_assoc($result)) {
-		echo "<div class='news-item'>";
-		echo "<h2'>" . $row['title'] . "</h2>";
-		echo "<p>" . $row['short_description'] . "</p>";
-		echo "<img src='" . $row['image_url'] . "' alt='" . $row['title'] . "'>";
-		echo "<a href='news.php?id=" . $row['id'] . "'>Read More...</a>";
-		echo "</div>";
-	}
-}
-
-?>
-<?php
-    $db = Database::getInstance();
-    // Check for errors
-    if ($db->mysqli->connect_errno) {
-        die("Connection failed: " . $db->mysqli->connect_error);
-    }
-
-
-    $sql = "SELECT * FROM Articles WHERE articleId = $article_id ";
-    $result = $db->query($sql);
-    if (!$result) {
-        die("Error retrieving article data: " . $db->mysqli->error);
-    }
-
-// Retrieve the article data
-    $article = $result->fetch_assoc();
-    // Loop through news articles and display them in a grid format
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<div class='news-item'>";
-        echo "<h2>" . $row['title'] . "</h2>";
-        echo "<p>" . $row['short_description'] . "</p>";
-        echo "<img src='" . $row['image_url'] . "' alt='" . $row['title'] . "'>";
-        echo "<a href='news.php?id=" . $row['id'] . "'>Read More...</a>";
-        echo "</div>";
-    }
-
-    // Close database connection
-    mysqli_close($db);
-    ?>
 <?php include PROJECT_ROOT . '/footer.html' ?>
-
