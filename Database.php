@@ -5,7 +5,18 @@ include_once PROJECT_ROOT . '/prelude.php';
 include_once 'mysqli';
 
 // include database connection settings
-require_once PROJECT_ROOT . '/../connectionSettings.php';
+if (DEBUG) {
+    require_once PROJECT_ROOT . '/../connectionSettings.php';
+} else {
+    // define database connection settings for production environment
+    // these settings are for production. 
+    // developers should instead edit /home/u20xxxxxxx/public_html/connectionSettings.php
+    define("DB_HOSTNAME", "localhost");
+    define("DB_DATABASE", "db202001264");
+    define("DB_USERNAME", "u202001264");
+    define("DB_PASSWORD", "u202001264");
+}
+
 
 class Database
 {
