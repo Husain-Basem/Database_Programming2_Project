@@ -35,11 +35,11 @@ Further registered users will have stricter password requirements.
   - [x] Hashed passwords
   - [x] Data validation
   - [x] User profile
-- [ ] Home page
+- [x] Home page
   - [x] Navbar
-  - [ ] Search bar
-  - [ ] News list
-- [ ] Search page
+  - [x] Search bar
+  - [x] News list
+- [x] Search page
 - [x] Comments and rating
   - [x] Comments
   - [x] Ratings
