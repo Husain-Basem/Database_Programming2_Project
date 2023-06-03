@@ -36,8 +36,8 @@ $pageTitle = 'Search Articles';
 include PROJECT_ROOT . '/header.html'; ?>
 
 <div class="container">
-    <h4>Search results for: '
-        <?= $_GET['q'] ?>'
+    <h4>Search results for: 
+        '<?= $_GET['q'] ?>'
     </h4>
     <div class="row">
         <div class="col-12 col-lg-10 mb-4">
