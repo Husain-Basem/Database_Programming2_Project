@@ -17,6 +17,7 @@
 }
 
 .card-img {
+    background-color: #808080;
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: 50%;
