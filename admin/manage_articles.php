@@ -50,7 +50,7 @@ $count = $pagination->get_total_entries();
                 the author. The article will not be deleted permanently until done so in the article editor.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary bg-secondary-subtle" data-bs-dismiss="modal">Close</button>
                 <a id="articleRemoveConfirmBtn" type="button" class="btn btn-danger">Remove</a>
             </div>
         </div>

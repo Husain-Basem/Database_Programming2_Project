@@ -16,6 +16,13 @@ define("DB_USERNAME", "u20xxxxxxx");
 define("DB_PASSWORD", "u20xxxxxxx");
 ```
 
+Remember to
+
+```console
+$ cd public_html
+$ chmod -R 777 Database_Programming2_Project
+```
+
 ## Built-in Users
 
 The following users are added by default:
@@ -27,39 +34,3 @@ The following users are added by default:
 | admin1   | 123      | Admin  |
 
 Further registered users will have stricter password requirements. 
-
-## Progress
-
-- [x] Users
-  - [x] Login, Logout & Register
-  - [x] Hashed passwords
-  - [x] Data validation
-  - [x] User profile
-- [x] Home page
-  - [x] Navbar
-  - [x] Search bar
-  - [x] News list
-- [x] Search page
-- [x] Comments and rating
-  - [x] Comments
-  - [x] Ratings
-- [x] Author panel
-  - [x] Add/Edit articles
-  - [x] Image upload
-  - [x] Attachments
-- [x] Admin panel
-  - [x] Manage users
-    - [x] Delete users
-    - [x] Edit users
-    - [x] Register authors
-  - [x] Manage all news articles
-    - [x] Approve articles
-    - [x] Edit/remove articles
-    - [x] delete Comments
-  - [x] Manage own articles
-  - [x] Admin report dashboard
-- [x] Display news article page 
-  - [x] Display article
-  - [x] Comments
-  - [x] Ratings
-  - [x] Attachments

@@ -79,7 +79,7 @@ include PROJECT_ROOT . '/header.html';
       </select>
     </div>
     <div class="col hstack gap-3">
-      <button id="saveBtn" class="btn btn-primary">Save</button>
+      <button id="saveBtn" class="btn btn-success">Save</button>
       <button id="previewBtn" class="btn btn-outline-primary">
         <?= $user->is_admin() ? 'Review' : 'Preview' ?>
       </button>
@@ -150,7 +150,7 @@ include PROJECT_ROOT . '/header.html';
           Are you sure you want to delete this article? This action is not reversible.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary bg-secondary-subtle" data-bs-dismiss="modal">Close</button>
 
           <form action="<?= BASE_URL . '/articleEdit/delete_article.php' ?>" method="post">
             <button type="submit" class="btn btn-danger">Delete</button>
@@ -174,7 +174,7 @@ include PROJECT_ROOT . '/header.html';
           Are you sure you want to publish this article? Once an article is published, it can no longer be edited.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary bg-secondary-subtle" data-bs-dismiss="modal">Close</button>
 
           <form action="<?= BASE_URL . '/articleEdit/publish_article.php' ?>" method="post">
             <button id="publishSubmit" type="submit" class="btn btn-primary">Publish</button>

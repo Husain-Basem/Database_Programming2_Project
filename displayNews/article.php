@@ -244,7 +244,7 @@ include PROJECT_ROOT . '/header.html';
                 author.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary bg-secondary-subtle" data-bs-dismiss="modal">Close</button>
                 <form action="<?= BASE_URL ?>/admin/remove_comment.php" method="post">
                     <input type="hidden" name="commentId" id="removeCommentConfirmId">
                     <button id="removeCommentConfirmBtn" type="submit" class="btn btn-danger">Remove</button>

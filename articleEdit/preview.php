@@ -51,7 +51,7 @@ include PROJECT_ROOT . '/header.html';
                 if ($user->is_admin()) {
                     echo '
               <a href="' . BASE_URL . '/articleEdit/edit_article.php?articleId=' . $article->articleId . '"
-                  class="ms-auto btn btn-secondary">Edit</a>
+                  class="ms-auto btn btn-secondary bg-secondary-subtle">Edit</a>
               <a href="' . BASE_URL . '/admin/approve_article.php?articleId=' . $article->articleId . '"
                   class="btn btn-success">Approve Publication</a>
             ';

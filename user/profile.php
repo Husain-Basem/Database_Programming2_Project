@@ -138,7 +138,7 @@ include PROJECT_ROOT . '/header.html';
                   reversible.</label>
                 <button class="btn btn-danger" type="submit" name="submitted" value="submitted">Delete account
                   permanently</button>
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-secondary bg-secondary-subtle" type="button" data-bs-dismiss="modal">Cancel</button>
               </form>
             </div>
           </div>

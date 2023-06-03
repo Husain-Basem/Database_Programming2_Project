@@ -2,7 +2,7 @@
 declare(strict_types=1);
 include_once '../prelude.php';
 
-$pageTitle = 'News';
+$pageTitle = 'Top of the Hour News';
 include PROJECT_ROOT . '/header.html';
 
 
@@ -34,7 +34,7 @@ $articles = $pagination->get_page(null, function ($row) {
         <h5 class="card-title">' . $article->title . '</h5>
         <p class="card-text">' . substr(strip_tags($article->content), 0, 170) . '...</p>
         <p class="card-text">
-            <span class="badge rounded-pill text-bg-secondary vertical-align-middle">
+            <span class="badge rounded-pill text-black bg-secondary-subtle vertical-align-middle">
                 ' . $article->display_category() . '
             </span>
             <small class="ms-2 text-muted">By ' . $article->get_author_name() . '</small>
