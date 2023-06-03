@@ -176,9 +176,10 @@ class User
     {
         $db = Database::getInstance();
         return $db->pquery(
-            'update Users set username = ?, email = ?, type = ?, description = ? where userId = ?',
-            'ssssi',
+            'update Users set username = ?, password = ?, email = ?, type = ?, description = ? where userId = ?',
+            'sssssi',
             $this->userName,
+            $this->password,
             $this->email,
             $this->type,
             $this->description,
