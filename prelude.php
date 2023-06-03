@@ -1,9 +1,17 @@
 <?php
-
 declare(strict_types=1);
-ini_set('show_errors', 'On');
-ini_set('display_errors', '1');
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+
+define("DEBUG", true);
+
+// show errors in development environment
+if (DEBUG) {
+    ini_set('show_errors', 'On');
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+} else {
+    ini_set('show_errors', 'Off');
+    ini_set('display_errors', '0');
+}
 
 // Project root i.e. /home/u202001264/DBProject
 define("PROJECT_ROOT", __DIR__);
