@@ -15,7 +15,10 @@ $articles = $pagination->get_page(null, function ($row) {
 
 <div class="container">
   <h1>Latest News</h1>
-  <?= $pagination->pagination_controls() ?>
+  <div class="d-flex gap-3" style="align-items: first baseline;">
+    Page:
+    <?= $pagination->pagination_controls(); ?>
+  </div>
   <div class="row">
     <?php
     foreach ($articles as $article) {
@@ -32,8 +35,9 @@ $articles = $pagination->get_page(null, function ($row) {
         <p class="card-text">' . substr(strip_tags($article->content), 0, 170) . '...</p>
         <p class="card-text">
             <span class="badge rounded-pill text-bg-secondary vertical-align-middle">
-                '.$article->display_category() .'
+                ' . $article->display_category() . '
             </span>
+            <small class="ms-2 text-muted">By ' . $article->get_author_name() . '</small>
             <small class="ms-2 text-muted">Read time ' . $article->readTime . ' min</small>
         </p>
         <a href="' . BASE_URL . '/displayNews/article.php?id=' . $article->articleId . '" class="btn btn-primary">Read More</a>
@@ -46,7 +50,10 @@ $articles = $pagination->get_page(null, function ($row) {
     }
     ?>
   </div>
-  <?= $pagination->pagination_controls() ?>
+  <div class="d-flex gap-3" style="align-items: first baseline;">
+    Page:
+    <?= $pagination->pagination_controls(); ?>
+  </div>
 </div>
 
 <?php
