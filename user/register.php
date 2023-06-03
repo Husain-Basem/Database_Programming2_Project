@@ -130,7 +130,7 @@ include PROJECT_ROOT . '/header.html';
                                         value="<?= $_POST['username'] ?>" pattern="[a-zA-Z0-9._-]{3,}" required>
                                     <label for="username">Username</label>
                                     <div class="invalid-feedback" id="usernameErr">Username must be at least 3
-                                        charachters (letters, numbers,&emsp;.&nbsp;_&nbsp;-&nbsp;)</div>
+                                        characters (letters, numbers,&emsp;.&nbsp;_&nbsp;-&nbsp;)</div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -207,7 +207,7 @@ include PROJECT_ROOT . '/header.html';
                     } else {
                         $(this).removeClass('is-invalid');
                         this.setCustomValidity('')
-                        $('#usernameErr').html('Username must be at least 3 charachters (letters,numbers,&emsp;.&nbsp;_&nbsp;-&nbsp;)');
+                        $('#usernameErr').html('Username must be at least 3 characters (letters,numbers,&emsp;.&nbsp;_&nbsp;-&nbsp;)');
                     }
                 });
         });
