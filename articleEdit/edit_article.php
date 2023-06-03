@@ -7,16 +7,16 @@ if (isset($_GET['articleId'])) {
 }
 
 if (empty($_SESSION['username'])) {
-    // redirect to login page that returns to this page
-    header('Location: ' . BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+  // redirect to login page that returns to this page
+  header('Location: ' . BASE_URL . '/user/login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
 }
 
 $user = User::from_username($_SESSION['username']);
 
 // only allow admins and the author of the article
 if (!($user->is_admin() || ($user->is_author() && $article->writtenBy == $user->userId))) {
-    $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
-    header('Location: ' . BASE_URL . '/index.php');
+  $_SESSION['toasts'][] = array('type' => 'danger', 'msg' => 'Unauthorized request');
+  header('Location: ' . BASE_URL . '/index.php');
 }
 
 
@@ -115,7 +115,7 @@ include PROJECT_ROOT . '/header.html';
               d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
           </svg>
         </a>
-        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="' . $a->fileId . '">
+        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="' . $a->fileId . '" onclick="deleteAttachmentOnClick(this)">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
             viewBox="0 0 16 16">
             <path
@@ -327,7 +327,7 @@ include PROJECT_ROOT . '/header.html';
               d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
           </svg>
         </a>
-        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="${upload.fileId}">
+        <button type="button" class="delete-btn btn btn-outline-danger" data-file-id="${upload.fileId}" onclick="deleteAttachmentOnClick(this)">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
             viewBox="0 0 16 16">
             <path
@@ -345,19 +345,6 @@ include PROJECT_ROOT . '/header.html';
       $(this).text(formatSize($(this).text()));
     });
 
-    $.each($('.delete-btn'), function () {
-      const item = $(this).parents('.list-group-item');
-      $(this).on('click', function () {
-        $.post('<?= BASE_URL ?>/articleEdit/delete_attachment.php', { fileId: $(this).data('fileId') })
-          .done(() => {
-            console.log("deleted");
-            item.addClass('fade');
-            setTimeout(() => item.remove(), 150);
-          })
-          .fail(() => { console.log("didnt delete " + $(this).data('fileId')); })
-      });
-    });
-
     function calculateReadTime() {
       const words = quill.root.innerText.trim().split(/\s+/).length;
       const images = $('.ql-editor img').length;
@@ -369,6 +356,18 @@ include PROJECT_ROOT . '/header.html';
     }
 
   });
+
+  function deleteAttachmentOnClick(thisEl) {
+    const item = $(thisEl).parents('.list-group-item');
+    $.post('<?= BASE_URL ?>/articleEdit/delete_attachment.php', { fileId: $(thisEl).data('fileId') })
+      .done(() => {
+        console.log("deleted");
+        item.addClass('fade');
+        setTimeout(() => item.remove(), 150);
+      })
+      .fail(() => { console.log("didnt delete " + $(thisEl).data('fileId')); })
+
+  }
 </script>
 
 <?php
